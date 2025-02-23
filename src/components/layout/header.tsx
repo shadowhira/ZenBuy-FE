@@ -8,6 +8,7 @@ import { Input } from "@/src/components/ui/input"
 import { Button } from "@/src/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
 import logo from "@images/zenBuy.webp"
+import { redirect } from "next/navigation"
 
 // Mock data for cart items
 const cartItems = [
@@ -82,11 +83,15 @@ const cartItems = [
 export default function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false)
 
+  const onGoHome = () => {
+    redirect('/')
+  }
+
   return (
     <header className="bg-background py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 cursor-pointer" onClick={() => onGoHome()}>
             <Image src={logo} alt="Zen Buy Logo" width={90} height={90} className="border-4 border-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full" />
             {/* <img className="h-8 w-auto" src="/logo.svg" alt="Zen Buy Logo" /> */}
           </div>

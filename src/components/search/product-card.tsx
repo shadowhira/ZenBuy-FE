@@ -1,42 +1,43 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/src/components/ui/card"
 import { Button } from "@/src/components/ui/button"
-import { Star } from "lucide-react"
-
+import Image from "next/image"
 interface ProductCardProps {
-  product: {
-    id: number
-    name: string
-    price: number
-    image: string
-    rating: number
-  }
+  product: Product
+}
+
+type Category = {
+  id: number
+  name: string
+  image: string
+}
+
+type Product = {
+  id: number
+  title: string
+  price: number
+  description: string
+  category: Category
+  images: string[]
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Card>
       <CardHeader>
-        <img
-          src={product.image || "/placeholder.svg"}
-          alt={product.name}
-          className="w-full h-48 object-cover rounded-t-lg"
-        />
+      <Image
+        src={(Array.isArray(product.images) ? product.images[0] : product.images) || "https://down-vn.img.susercontent.com/file/34934060f7015e5452eddd67d9565e1d_tn"}
+        alt={product.title || "hehe"}
+        className="w-full h-48 object-cover rounded-lg"
+        width={200}
+        height={200}
+      />
       </CardHeader>
       <CardContent>
-        <h3 className="font-semibold">{product.name}</h3>
-        <p className="text-muted-foreground">${product.price.toFixed(2)}</p>
-        <div className="flex items-center mt-2">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              className={`h-4 w-4 ${index < product.rating ? "text-yellow-400" : "text-gray-300"}`}
-              fill={index < product.rating ? "currentColor" : "none"}
-            />
-          ))}
-        </div>
+      <h3 className="font-semibold">{product.title}</h3>
+      <p className="text-muted-foreground">${product.price.toFixed(2)}</p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Add to Cart</Button>
+      <Button className="w-full">Add to Cart</Button>
       </CardFooter>
     </Card>
   )

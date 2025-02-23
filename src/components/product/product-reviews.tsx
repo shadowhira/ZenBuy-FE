@@ -1,7 +1,7 @@
 import { Star } from "lucide-react"
 
 interface ProductReviewsProps {
-  productId: string
+  productId: number
 }
 
 export default function ProductReviews({ productId }: ProductReviewsProps) {

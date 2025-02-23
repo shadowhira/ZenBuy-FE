@@ -8,7 +8,7 @@ import { Input } from "@/src/components/ui/input"
 
 interface ProductDetailsProps {
   product: {
-    name: string
+    title: string
     price: number
     rating: number
     reviews: number
@@ -25,7 +25,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       <div>
         <Image
           src={mainImage || "/placeholder.svg"}
-          alt={product.name}
+          alt={product.title}
           width={500}
           height={500}
           className="w-full rounded-lg"
@@ -35,7 +35,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             <Image
               key={index}
               src={img || "/placeholder.svg"}
-              alt={`${product.name} ${index + 1}`}
+              alt={`${product.title} ${index + 1}`}
               width={100}
               height={100}
               className="rounded-md cursor-pointer"
@@ -45,7 +45,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </div>
       </div>
       <div>
-        <h1 className="text-3xl font-bold">{product.name}</h1>
+        <h1 className="text-3xl font-bold">{product.title}</h1>
         <div className="flex items-center mt-2">
           {Array.from({ length: 5 }).map((_, index) => (
             <Star

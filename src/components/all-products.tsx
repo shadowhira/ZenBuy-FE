@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/comp
 import { Button } from "@/src/components/ui/button"
 import { getProducts } from "../apis"
 import Image from "next/image"
+import { redirect } from "next/navigation"
 
 type Category = {
   id: number
@@ -41,13 +42,17 @@ export default function AllProducts() {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
+   const onClick = (id: number) => {
+    redirect(`/product/${id}`)
+  }
+
   return (
     <section className="bg-background py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-6">All Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentProducts.map((product) => (
-            <Card key={product.id} className="flex flex-col h-full">
+            <Card key={product.id} className="flex flex-col h-full cursor-pointer" onClick={() => onClick(product.id)}>
               <CardHeader className="p-0">
                 <Image
                   src={product.images[0] || ""}

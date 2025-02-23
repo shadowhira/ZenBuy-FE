@@ -40,6 +40,11 @@ export default async function RootLayout({
   const cookieStore = cookies();
   const locale = (await cookieStore).get('NEXT_LOCALE')?.value || params.locale;
   const { resources } = await initTranslations(locale, i18nNamespaces);
+
+  if (children === null || (children as any).type.name === 'notfound') {
+    return <html><body>{children}</body></html>;
+  }
+
   return (
     <html lang={locale} >
       <body className={inter.className}>

@@ -1,27 +1,43 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/src/components/ui/button"
 import ProductCard from "@/src/components/search/product-card"
+import { getProducts } from "@/src/apis"
 
 interface SimilarProductsProps {
-  category: string
+  category: Category
+}
+
+type Category = {
+  id: number
+  name: string
+  image: string
+}
+
+type Product = {
+  id: number
+  title: string
+  price: number
+  description: string
+  category: Category
+  images: string[]
 }
 
 export default function SimilarProducts({ category }: SimilarProductsProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 8
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([])
 
-  // Mock similar products
-  const similarProducts = Array.from({ length: 24 }, (_, i) => ({
-    id: i + 1,
-    name: `Similar Product ${i + 1}`,
-    // price: Math.floor(Math.random() * 100) + 50,
-    image: `/product${(i % 8) + 1}.jpg`,
-    // rating: Math.floor(Math.random() * 5) + 1,
-    price: 500,
-    rating: 4,
-  }))
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const products = await getProducts()
+      products.sort((a, b) => a.price - b.price)
+      setSimilarProducts(products)
+    }
+
+    fetchProducts()
+  }, [])
 
   const indexOfLastProduct = currentPage * productsPerPage
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage

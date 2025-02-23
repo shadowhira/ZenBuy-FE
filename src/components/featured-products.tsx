@@ -6,6 +6,7 @@ import { Button } from "@/src/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card"
 import { getProducts } from "../apis"
 import Image from "next/image"
+import { redirect } from "next/navigation"
 
 type Category = {
   id: number
@@ -37,6 +38,10 @@ export default function FeaturedProducts() {
     fetchProducts()
   }, [])
 
+  const onClick = (id: number) => {
+    redirect(`/product/${id}`)
+  }
+
   const nextPage = () => {
     setPage((prevPage) => (prevPage + 1) % Math.ceil(featuredProducts.length / productsPerPage))
   }
@@ -58,7 +63,7 @@ export default function FeaturedProducts() {
         <div className="relative">
           <div className="flex space-x-4 justify-between">
             {displayedProducts.map((product) => (
-              <Card key={product.id} className="flex-grow flex flex-col">
+              <Card key={product.id} className="flex-grow flex flex-col cursor-pointer" onClick={() => onClick(product.id)}>
                 <CardHeader>
                   <Image
                     src={product.images[0] || ""}
