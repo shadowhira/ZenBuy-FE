@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 const allProducts = Array.from({ length: 40 }, (_, i) => ({
   id: i + 1,
   name: `Product ${i + 1}`,
-  price: `$${(Math.random() * 100 + 50).toFixed(2)}`,
+  price: '$500',
+  // price: `$${(Math.random() * 100 + 50).toFixed(2)}`,
   image: `/product${(i % 8) + 1}.jpg`,
 }))
 

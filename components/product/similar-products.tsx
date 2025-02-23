@@ -16,9 +16,11 @@ export default function SimilarProducts({ category }: SimilarProductsProps) {
   const similarProducts = Array.from({ length: 24 }, (_, i) => ({
     id: i + 1,
     name: `Similar Product ${i + 1}`,
-    price: Math.floor(Math.random() * 100) + 50,
+    // price: Math.floor(Math.random() * 100) + 50,
     image: `/product${(i % 8) + 1}.jpg`,
-    rating: Math.floor(Math.random() * 5) + 1,
+    // rating: Math.floor(Math.random() * 5) + 1,
+    price: 500,
+    rating: 4,
   }))
 
   const indexOfLastProduct = currentPage * productsPerPage

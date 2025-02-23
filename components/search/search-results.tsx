@@ -18,9 +18,11 @@ export default function SearchResults() {
   const products = Array.from({ length: 12 }, (_, i) => ({
     id: i + 1,
     name: `Product ${i + 1}`,
-    price: Math.floor(Math.random() * 500) + 50,
+    // price: Math.floor(Math.random() * 500) + 50,
     image: `/product${(i % 8) + 1}.jpg`,
-    rating: Math.floor(Math.random() * 5) + 1,
+    price: 500,
+    rating: 4,
+    // rating: Math.floor(Math.random() * 5) + 1,
   }))
 
   return (
