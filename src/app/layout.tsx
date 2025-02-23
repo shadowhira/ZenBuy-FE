@@ -55,7 +55,7 @@ export default async function RootLayout({
             resources={resources}
           >
             <Navbar />
-            <Header />
+            {/* <Header /> */}
             <main className="flex-grow">{children}</main>
             <Footer />
           </TranslationsProvider>
