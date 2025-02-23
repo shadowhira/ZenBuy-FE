@@ -1,18 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card"
 import { Button } from "@/src/components/ui/button"
+import { getProducts } from "../apis"
+import Image from "next/image"
 
-const allProducts = Array.from({ length: 40 }, (_, i) => ({
-  id: i + 1,
-  name: `Product ${i + 1}`,
-  price: '$500',
-  // price: `$${(Math.random() * 100 + 50).toFixed(2)}`,
-  image: `/product${(i % 8) + 1}.jpg`,
-}))
+type Category = {
+  id: number
+  name: string
+  image: string
+}
+
+type Product = {
+  id: number
+  title: string
+  price: number
+  description: string
+  category: Category
+  images: string[]
+}
 
 export default function AllProducts() {
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const products = await getProducts();
+      setAllProducts(products);
+    };
+  
+    fetchProducts();
+  }, []);
   const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 12
   const totalPages = Math.ceil(allProducts.length / productsPerPage)
@@ -29,19 +47,23 @@ export default function AllProducts() {
         <h2 className="text-3xl font-bold mb-6">All Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentProducts.map((product) => (
-            <Card key={product.id}>
-              <CardHeader>
-                <img
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-t-lg"
+            <Card key={product.id} className="flex flex-col h-full">
+              <CardHeader className="p-0">
+                <Image
+                  src={product.images[0] || ""}
+                  alt={product.title}
+                  className="w-full h-full object-cover rounded-t-lg"
+                  layout="responsive"
+                  width={300}
+                  height={200}
                 />
               </CardHeader>
-              <CardContent>
-                <CardTitle>{product.name}</CardTitle>
-                <p className="text-muted-foreground">{product.price}</p>
+              <CardContent className="flex flex-col gap-2 mt-5 flex-grow">
+                <CardTitle>{product.title}</CardTitle>
+                <p className="text-muted-foreground">${product.price.toFixed(2)}</p>
+                <p className="text-muted-foreground">{product.category.name}</p>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="mt-auto">
                 <Button className="w-full">Add to Cart</Button>
               </CardFooter>
             </Card>
@@ -63,4 +85,3 @@ export default function AllProducts() {
     </section>
   )
 }
-

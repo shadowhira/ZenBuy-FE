@@ -1,6 +1,15 @@
+'use client'
+
 import { Button } from "@/src/components/ui/button"
+import heroImg from "@images/landing-page/heroImgEcommerce.webp"
+import Image from "next/image"
+import { redirect } from 'next/navigation';
 
 export default function Hero() {
+  const handleShopNowClick = () => {
+    redirect('/search')
+  }
+
   return (
     <div className="bg-gradient-to-r from-blue-900 to-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
@@ -8,16 +17,18 @@ export default function Hero() {
           <div>
             <h1 className="text-4xl font-bold mb-4">Welcome to Zen Buy</h1>
             <p className="text-xl mb-6">Discover a world of amazing products at unbeatable prices.</p>
-            <Button size="lg" variant="secondary">
+            <Button size="lg" variant="secondary" onClick={handleShopNowClick}>
               Shop Now
             </Button>
           </div>
           <div className="hidden md:block">
-            <img src="/hero-image.svg" alt="Shopping illustration" className="w-full" />
+            <video autoPlay loop muted className="w-full border-8 border-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-xl">
+              <source src="/videos/hero-video.mp4" type="video/mp4" />
+            </video>
+            {/* <Image src={heroImg} alt="Shopping illustration" className="w-full" /> */}
           </div>
         </div>
       </div>
     </div>
   )
 }
-

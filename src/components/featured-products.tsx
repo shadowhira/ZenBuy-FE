@@ -1,24 +1,41 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/src/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card"
+import { getProducts } from "../apis"
+import Image from "next/image"
 
-const featuredProducts = [
-  { id: 1, name: "Premium Sneakers", price: "$129.99", image: "/product1.jpg" },
-  { id: 2, name: "Stylish Sunglasses", price: "$79.99", image: "/product2.jpg" },
-  { id: 3, name: "Leather Watch", price: "$199.99", image: "/product3.jpg" },
-  { id: 4, name: "Denim Jacket", price: "$89.99", image: "/product4.jpg" },
-  { id: 5, name: "Wireless Earbuds", price: "$149.99", image: "/product5.jpg" },
-  { id: 6, name: "Slim Fit Jeans", price: "$69.99", image: "/product6.jpg" },
-  { id: 7, name: "Smart Watch", price: "$249.99", image: "/product7.jpg" },
-  { id: 8, name: "Running Shoes", price: "$109.99", image: "/product8.jpg" },
-]
+type Category = {
+  id: number
+  name: string
+  image: string
+}
+
+type Product = {
+  id: number
+  title: string
+  price: number
+  description: string
+  category: Category
+  images: string[]
+}
 
 export default function FeaturedProducts() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
   const [page, setPage] = useState(0)
   const productsPerPage = 4
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const products = await getProducts()
+      products.sort((a, b) => a.price - b.price)
+      setFeaturedProducts(products)
+    }
+
+    fetchProducts()
+  }, [])
 
   const nextPage = () => {
     setPage((prevPage) => (prevPage + 1) % Math.ceil(featuredProducts.length / productsPerPage))
@@ -39,19 +56,21 @@ export default function FeaturedProducts() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
         <div className="relative">
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 justify-between">
             {displayedProducts.map((product) => (
-              <Card key={product.id} className="w-64">
+              <Card key={product.id} className="flex-grow flex flex-col">
                 <CardHeader>
-                  <img
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    className="w-full h-48 object-cover rounded-t-lg"
+                  <Image
+                    src={product.images[0] || ""}
+                    alt={product.title}
+                    className="w-full h-full object-cover rounded-lg"
+                    width={200}
+                    height={100}
                   />
                 </CardHeader>
-                <CardContent>
-                  <CardTitle>{product.name}</CardTitle>
-                  <p className="text-muted-foreground">{product.price}</p>
+                <CardContent className="flex flex-grow">
+                  <CardTitle>{product.title}</CardTitle>
+                  <p className="text-muted-foreground">${product.price.toFixed(2)}</p>
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full">Add to Cart</Button>
@@ -80,4 +99,3 @@ export default function FeaturedProducts() {
     </section>
   )
 }
-

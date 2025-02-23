@@ -3,28 +3,35 @@
 import { useEffect, useState, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/src/components/ui/button"
+import { getCategories } from "../apis"
+import Image from "next/image"
 
-const categories = [
-  { name: "Shoes", icon: "👟" },
-  { name: "Pants", icon: "👖" },
-  { name: "Shirts", icon: "👕" },
-  { name: "Hats", icon: "🧢" },
-  { name: "Glasses", icon: "👓" },
-  { name: "Watches", icon: "⌚" },
-  { name: "Bags", icon: "👜" },
-  { name: "Accessories", icon: "🧣" },
-]
+type Category = {
+  id: number
+  name: string
+  image: string
+}
 
 export default function CategoryCarousel() {
   const [startIndex, setStartIndex] = useState(0)
+  const [categories, setCategories] = useState<Category[]>([])
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await getCategories()
+      setCategories(categories)
+    }
+
+    fetchCategories()
+  }, [])
 
   const nextSlide = useCallback(() => {
     setStartIndex((prevIndex) => (prevIndex + 1) % categories.length)
-  }, [])
+  }, [categories.length])
 
   const prevSlide = useCallback(() => {
     setStartIndex((prevIndex) => (prevIndex - 1 + categories.length) % categories.length)
-  }, [])
+  }, [categories.length])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,16 +41,25 @@ export default function CategoryCarousel() {
     return () => clearInterval(interval)
   }, [nextSlide])
 
+  const getVisibleCategories = () => {
+    const endIndex = startIndex + 6
+    if (endIndex <= categories.length) {
+      return categories.slice(startIndex, endIndex)
+    } else {
+      return [...categories.slice(startIndex), ...categories.slice(0, endIndex - categories.length)]
+    }
+  }
+
   return (
     <section className="bg-background py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-6">Product Categories</h2>
-        <div className="relative">
+        <div className="relative flex flex-col">
           <div className="flex overflow-hidden">
-            {categories.slice(startIndex, startIndex + 6).map((category, index) => (
+            {getVisibleCategories().map((category, index) => (
               <div key={index} className="flex-shrink-0 w-1/6 px-2">
                 <div className="bg-secondary rounded-lg p-4 text-center">
-                  <div className="text-4xl mb-2">{category.icon}</div>
+                  <Image src={category.image} alt={category.name} className="mb-2 w-full h-full rounded-lg" width={300} height={300} />
                   <div className="font-medium">{category.name}</div>
                 </div>
               </div>
@@ -70,4 +86,3 @@ export default function CategoryCarousel() {
     </section>
   )
 }
-

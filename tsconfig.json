@@ -25,7 +25,10 @@
       "@components/*": ["src/components/*"],
       "@app/*": ["src/app/*"],
       "@utils/*": ["src/utils/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+      "@images/*": ["public/images/*"],
+      "@svg/*": ["public/svg/*"],
+      "@videos/*": ["public/videos/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
