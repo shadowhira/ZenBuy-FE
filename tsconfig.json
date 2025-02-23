@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "target": "ES6",
@@ -22,6 +23,7 @@
     "paths": {
       "@/*": ["./*"],
       "@components/*": ["src/components/*"],
+      "@app/*": ["src/app/*"],
       "@utils/*": ["src/utils/*"],
       "@styles/*": ["src/styles/*"]
     }

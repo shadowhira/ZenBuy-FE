@@ -5,6 +5,13 @@ import "./globals.css"
 import Navbar from "@/src/components/layout/navbar"
 import Header from "@/src/components/layout/header"
 import Footer from "@/src/components/layout/footer"
+import './globals.css'
+import i18nConfig from "@/i18nConfig"
+import initTranslations from "./i18n"
+import TranslationsProvider from "../components/translation-provider"
+import { ReactNode } from "react"
+import { dir } from "i18next"
+import { cookies } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -14,25 +21,41 @@ export const metadata: Metadata = {
     generator: 'v0.dev'
 }
 
-export default function RootLayout({
+export function generateStaticParams() {
+  return i18nConfig.locales.map((locale) => ({ locale }));
+}
+interface RootLayoutProps {
+  children: ReactNode;
+  params: {
+    locale: string;
+  };
+}
+
+const i18nNamespaces = ['default'];
+
+export default async function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+  params
+}: RootLayoutProps) {
+  const cookieStore = cookies();
+  const locale = (await cookieStore).get('NEXT_LOCALE')?.value || params.locale;
+  const { resources } = await initTranslations(locale, i18nNamespaces);
   return (
-    <html lang="en">
+    <html lang={locale} >
       <body className={inter.className}>
         <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <Header />
-          <main className="flex-grow">{children}</main>
-          <Footer />
+          <TranslationsProvider
+            locale={locale}
+            namespaces={['default']}
+            resources={resources}
+          >
+            <Navbar />
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </TranslationsProvider>
         </div>
       </body>
     </html>
   )
 }
-
-
-
-import './globals.css'
