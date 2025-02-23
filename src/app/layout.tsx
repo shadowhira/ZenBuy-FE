@@ -8,10 +8,10 @@ import Footer from "@/src/components/layout/footer"
 import './globals.css'
 import i18nConfig from "@/i18nConfig"
 import initTranslations from "./i18n"
-import TranslationsProvider from "../components/translation-provider"
 import { ReactNode } from "react"
 import { dir } from "i18next"
 import { cookies } from "next/headers";
+import TranslationsProvider from "../components/providers/translation-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 

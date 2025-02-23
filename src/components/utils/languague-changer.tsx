@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import i18nConfig from '../../i18nConfig';
+import i18nConfig from '../../../i18nConfig';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
 import { Globe } from "lucide-react"
 import { Button } from "@/src/components/ui/button"
