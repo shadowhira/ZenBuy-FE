@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import i18nConfig from '../../i18nConfig';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
+import { Globe } from "lucide-react"
+import { Button } from "@/src/components/ui/button"
 
 export default function LanguageChanger() {
   const { i18n } = useTranslation();
@@ -11,9 +14,7 @@ export default function LanguageChanger() {
   const router = useRouter();
   const currentPathname = usePathname();
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLocale = e.target.value;
-
+  const handleChange = (newLocale: string) => {
     // Set cookie for next-i18n-router
     const days = 30;
     const date = new Date();
@@ -40,17 +41,17 @@ export default function LanguageChanger() {
   };
 
   return (
-    <div>
-      <label htmlFor='language-select'>Choose language:</label>
-      <select
-        id='language-select'
-        onChange={handleChange}
-        value={currentLocale}
-      >
-        <option value='en'>English</option>
-        <option value='ja'>Japanese</option>
-        <option value='vi'>Vietnamese</option>
-      </select>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <Globe className="h-5 w-5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" defaultValue={currentLocale}>
+        <DropdownMenuItem onClick={() => handleChange('en')}>English</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleChange('vi')}>Tiếng Việt</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleChange('ja')}>日本語</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

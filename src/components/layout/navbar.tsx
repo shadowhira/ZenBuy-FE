@@ -4,6 +4,8 @@ import { useState } from "react"
 import { Bell, Moon, Sun, Globe, ChevronDown } from "lucide-react"
 import { Button } from "@/src/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
+import LanguageChanger from "../languague-changer"
+import TestComponent from "../test"
 
 const categories = [
   { name: "Hats", subcategories: ["Baseball Caps", "Beanies", "Fedoras"] },
@@ -53,18 +55,8 @@ export default function Navbar() {
               <Sun className="h-5 w-5 dark:hidden" />
               <Moon className="h-5 w-5 hidden dark:block" />
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Globe className="h-5 w-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>English</DropdownMenuItem>
-                <DropdownMenuItem>Tiếng Việt</DropdownMenuItem>
-                <DropdownMenuItem>日本語</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <LanguageChanger />
+            {/* <TestComponent /> */}
           </div>
         </div>
       </div>
