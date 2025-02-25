@@ -93,7 +93,6 @@ export default function Header() {
         <div className="flex items-center justify-between">
           <div className="flex-shrink-0 cursor-pointer" onClick={() => onGoHome()}>
             <Image src={logo} alt="Zen Buy Logo" width={90} height={90} className="border-4 border-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full" />
-            {/* <img className="h-8 w-auto" src="/logo.svg" alt="Zen Buy Logo" /> */}
           </div>
           <div className="flex-grow mx-4">
             <div className="relative">

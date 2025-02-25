@@ -17,11 +17,11 @@ const cartItems = [
     quantity: 1,
     variants: ["Small", "Medium", "Large"],
   },
-  { id: 2, name: "Product 2", image: "https://img.freepik.com/premium-psd/robot-sword-isolated-transparent-background-png_1053264-1.jpg?w=1380", price: 29.99, quantity: 2, variants: ["Red", "Blue", "Green"] },
+  { id: 2, name: "Product 2", image: "https://th.bing.com/th/id/OIP.74Dgnpy6A4ZOnqcwB6iGrgAAAA?pid=ImgDet&w=168&h=350&c=7&dpr=2", price: 29.99, quantity: 2, variants: ["Red", "Blue", "Green"] },
   {
     id: 3,
     name: "Product 3",
-    image: "https://img.freepik.com/premium-psd/robot-sword-isolated-transparent-background-png_1053264-1.jpg?w=1380",
+    image: "https://th.bing.com/th/id/OIP.NlchQloXSuGbiIRG0ddlXgHaHa?pid=ImgDet&w=189&h=189&c=7&dpr=2",
     price: 39.99,
     quantity: 1,
     variants: ["Option A", "Option B", "Option C"],
