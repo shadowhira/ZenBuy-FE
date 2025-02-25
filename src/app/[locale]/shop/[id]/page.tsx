@@ -8,8 +8,8 @@ export default function ShopPage({ params }: { params: { id: string } }) {
     id: params.id,
     name: "Tech Haven",
     description: "Your one-stop shop for all things tech",
-    banner: "/shop-banner.jpg",
-    avatar: "/shop-avatar.jpg",
+    banner: "https://th.bing.com/th/id/OIP.1Ij7KtBNY8Dkqm5oTmV2ygHaEK?w=308&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
+    avatar: "https://th.bing.com/th/id/OIP.6kyJeTbWMvEdp4zvX14IFAHaHa?w=175&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
     followers: 5678,
     rating: 4.8,
   }

@@ -61,16 +61,16 @@ export default function FeaturedProducts() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
         <div className="relative">
-          <div className="flex space-x-4 justify-between">
+          <div className="flex space-x-4 justify-between h-[400px]">
             {displayedProducts.map((product) => (
               <Card key={product.id} className="flex-grow flex flex-col cursor-pointer" onClick={() => onClick(product.id)}>
                 <CardHeader>
                   <Image
                     src={product.images[0] || ""}
                     alt={product.title}
-                    className="w-full h-full object-cover rounded-lg"
+                    className="w-full max-h-[150px] object-cover rounded-lg"
                     width={200}
-                    height={100}
+                    height={200}
                   />
                 </CardHeader>
                 <CardContent className="flex flex-grow">

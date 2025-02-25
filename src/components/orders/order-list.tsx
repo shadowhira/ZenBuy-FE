@@ -6,15 +6,15 @@ const orders = [
     id: 1,
     shop: "Tech Store",
     status: "Shipping",
-    products: [{ id: 1, name: "Smartphone", image: "/product1.jpg", variant: "Black", quantity: 1, price: 599.99 }],
+    products: [{ id: 1, name: "Smartphone", image: "https://th.bing.com/th/id/OIP.7Pmzy4WNwMXk27HnmaPhYwHaDt?w=329&h=175&c=7&r=0&o=5&dpr=2&pid=1.7", variant: "Black", quantity: 1, price: 599.99 }],
   },
   {
     id: 2,
     shop: "Fashion Outlet",
     status: "Completed",
     products: [
-      { id: 2, name: "T-Shirt", image: "/product2.jpg", variant: "Large", quantity: 2, price: 29.99 },
-      { id: 3, name: "Jeans", image: "/product3.jpg", variant: "32x32", quantity: 1, price: 59.99 },
+      { id: 2, name: "T-Shirt", image: "https://th.bing.com/th/id/OIP.2JgARAJfGc7Mq_H8pE4WtgHaEM?w=311&h=180&c=7&r=0&o=5&dpr=2&pid=1.7", variant: "Large", quantity: 2, price: 29.99 },
+      { id: 3, name: "Jeans", image: "https://th.bing.com/th/id/OIP.H3Er7U2zb1xHUW7kwliTMwHaHa?w=171&h=180&c=7&r=0&o=5&dpr=2&pid=1.7", variant: "32x32", quantity: 1, price: 59.99 },
     ],
   },
 ]
