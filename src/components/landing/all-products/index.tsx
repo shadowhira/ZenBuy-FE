@@ -6,6 +6,7 @@ import { Button } from "@/src/components/ui/button"
 import Image from "next/image"
 import { redirect } from "next/navigation"
 import { getProducts } from "@/src/apis"
+import { useTranslation } from "react-i18next"
 
 type Category = {
   id: number
@@ -23,6 +24,7 @@ type Product = {
 }
 
 export default function AllProducts() {
+  const { t } = useTranslation("landing");
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   useEffect(() => {
     const fetchProducts = async () => {
@@ -49,7 +51,7 @@ export default function AllProducts() {
   return (
     <section className="bg-background py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold mb-6">All Products</h2>
+        <h2 className="text-3xl font-bold mb-6">{t('allProduct')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentProducts.map((product) => (
             <Card key={product.id} className="flex flex-col h-full cursor-pointer" onClick={() => onClick(product.id)}>
@@ -69,7 +71,7 @@ export default function AllProducts() {
                 <p className="text-muted-foreground">{product.category.name}</p>
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button className="w-full">Add to Cart</Button>
+                <Button className="w-full">{t('addToCart')}</Button>
               </CardFooter>
             </Card>
           ))}

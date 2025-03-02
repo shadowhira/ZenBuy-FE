@@ -7,8 +7,8 @@
     "url": "https://github.com/shadowhira"
   },
   "scripts": {
-    "translate": "exec i18nexus pull",
-    "dev": "next dev --turbopack -p 3001",
+    "translate": "i18nexus pull",
+    "dev": "pnpm translate && next dev --turbopack -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

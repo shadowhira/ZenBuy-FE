@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/comp
 import Image from "next/image"
 import { redirect } from "next/navigation"
 import { getProducts } from "@/src/apis"
+import { useTranslation } from "react-i18next"
 
 type Category = {
   id: number
@@ -24,6 +25,7 @@ type Product = {
 }
 
 export default function FeaturedProducts() {
+  const { t } = useTranslation("landing");
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
   const [page, setPage] = useState(0)
   const productsPerPage = 4
@@ -59,7 +61,7 @@ export default function FeaturedProducts() {
   return (
     <section className="bg-background py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
+        <h2 className="text-3xl font-bold mb-6">{t('featureProductLabel')}</h2>
         <div className="relative">
           <div className="flex space-x-4 justify-between h-[400px]">
             {displayedProducts.map((product) => (
@@ -78,7 +80,7 @@ export default function FeaturedProducts() {
                   <p className="text-muted-foreground">${product.price.toFixed(2)}</p>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full">Add to Cart</Button>
+                  <Button className="w-full">{t('addToCart')}</Button>
                 </CardFooter>
               </Card>
             ))}

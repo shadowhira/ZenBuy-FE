@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/src/components/ui/button"
 import { getCategories } from "../../../apis"
 import Image from "next/image"
+import { useTranslation } from "react-i18next"
 
 type Category = {
   id: number
@@ -13,6 +14,7 @@ type Category = {
 }
 
 export default function CategoryCarousel() {
+  const { t } = useTranslation("landing");
   const [startIndex, setStartIndex] = useState(0)
   const [categories, setCategories] = useState<Category[]>([])
 
@@ -53,7 +55,7 @@ export default function CategoryCarousel() {
   return (
     <section className="bg-background py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold mb-6">Product Categories</h2>
+        <h2 className="text-3xl font-bold mb-6">{t('productCategoryLabel')}</h2>
         <div className="relative flex flex-col">
           <div className="flex overflow-hidden">
             {getVisibleCategories().map((category, index) => (
