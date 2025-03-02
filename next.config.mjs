@@ -7,6 +7,9 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  sassOptions: {
+    includePaths: ['./src/styles'], // Đường dẫn đến thư mục SCSS của bạn
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

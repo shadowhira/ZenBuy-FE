@@ -29,6 +29,7 @@
       "@images/*": ["public/images/*"],
       "@svg/*": ["public/svg/*"],
       "@videos/*": ["public/videos/*"],
+      "@animations/*": ["src/styles/animations/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

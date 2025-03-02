@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card"
 import { Button } from "@/src/components/ui/button"
-import { getProducts } from "../apis"
 import Image from "next/image"
 import { redirect } from "next/navigation"
+import { getProducts } from "@/src/apis"
 
 type Category = {
   id: number

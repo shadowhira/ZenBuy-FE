@@ -21,76 +21,6 @@ type Category = {
   image: string
 }
 
-// Mock data for cart items
-const cartItems = [
-  {
-    "id": 1,
-    "title": "Majestic Mountain Graphic T-Shirt",
-    "slug": "majestic-mountain-graphic-t-shirt",
-    "price": 44,
-    "description": "Elevate your wardrobe with this stylish black t-shirt featuring a striking monochrome mountain range graphic. Perfect for those who love the outdoors or want to add a touch of nature-inspired design to their look, this tee is crafted from soft, breathable fabric ensuring all-day comfort. Ideal for casual outings or as a unique gift, this t-shirt is a versatile addition to any collection.",
-    "category": {
-      "id": 1,
-      "name": "Clothes",
-      "slug": "clothes",
-      "image": "https://i.imgur.com/QkIa5tT.jpeg",
-      "creationAt": "2025-02-23T07:52:28.000Z",
-      "updatedAt": "2025-02-23T07:52:28.000Z"
-    },
-    "images": [
-      "https://i.imgur.com/QkIa5tT.jpeg",
-      "https://i.imgur.com/jb5Yu0h.jpeg",
-      "https://i.imgur.com/UlxxXyG.jpeg"
-    ],
-    "creationAt": "2025-02-23T07:52:28.000Z",
-    "updatedAt": "2025-02-23T07:52:28.000Z"
-  },
-  {
-    "id": 4,
-    "title": "Classic Grey Hooded Sweatshirt",
-    "slug": "classic-grey-hooded-sweatshirt",
-    "price": 90,
-    "description": "Elevate your casual wear with our Classic Grey Hooded Sweatshirt. Made from a soft cotton blend, this hoodie features a front kangaroo pocket, an adjustable drawstring hood, and ribbed cuffs for a snug fit. Perfect for those chilly evenings or lazy weekends, it pairs effortlessly with your favorite jeans or joggers.",
-    "category": {
-      "id": 1,
-      "name": "Clothes",
-      "slug": "clothes",
-      "image": "https://i.imgur.com/QkIa5tT.jpeg",
-      "creationAt": "2025-02-23T07:52:28.000Z",
-      "updatedAt": "2025-02-23T07:52:28.000Z"
-    },
-    "images": [
-      "https://i.imgur.com/R2PN9Wq.jpeg",
-      "https://i.imgur.com/IvxMPFr.jpeg",
-      "https://i.imgur.com/7eW9nXP.jpeg"
-    ],
-    "creationAt": "2025-02-23T07:52:28.000Z",
-    "updatedAt": "2025-02-23T07:52:28.000Z"
-  },
-  {
-    "id": 5,
-    "title": "Classic Black Hooded Sweatshirt",
-    "slug": "classic-black-hooded-sweatshirt",
-    "price": 79,
-    "description": "Elevate your casual wardrobe with our Classic Black Hooded Sweatshirt. Made from high-quality, soft fabric that ensures comfort and durability, this hoodie features a spacious kangaroo pocket and an adjustable drawstring hood. Its versatile design makes it perfect for a relaxed day at home or a casual outing.",
-    "category": {
-      "id": 1,
-      "name": "Clothes",
-      "slug": "clothes",
-      "image": "https://i.imgur.com/QkIa5tT.jpeg",
-      "creationAt": "2025-02-23T07:52:28.000Z",
-      "updatedAt": "2025-02-23T07:52:28.000Z"
-    },
-    "images": [
-      "https://i.imgur.com/cSytoSD.jpeg",
-      "https://i.imgur.com/WwKucXb.jpeg",
-      "https://i.imgur.com/cE2Dxh9.jpeg"
-    ],
-    "creationAt": "2025-02-23T07:52:28.000Z",
-    "updatedAt": "2025-02-23T07:52:28.000Z"
-  },
-]
-
 export default function Navbar() {
   const [openCategory, setOpenCategory] = useState<string | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
@@ -197,3 +127,73 @@ export default function Navbar() {
     </div>
   </nav>
 )}
+
+// Mock data for cart items
+const cartItems = [
+  {
+    "id": 1,
+    "title": "Majestic Mountain Graphic T-Shirt",
+    "slug": "majestic-mountain-graphic-t-shirt",
+    "price": 44,
+    "description": "Elevate your wardrobe with this stylish black t-shirt featuring a striking monochrome mountain range graphic. Perfect for those who love the outdoors or want to add a touch of nature-inspired design to their look, this tee is crafted from soft, breathable fabric ensuring all-day comfort. Ideal for casual outings or as a unique gift, this t-shirt is a versatile addition to any collection.",
+    "category": {
+      "id": 1,
+      "name": "Clothes",
+      "slug": "clothes",
+      "image": "https://i.imgur.com/QkIa5tT.jpeg",
+      "creationAt": "2025-02-23T07:52:28.000Z",
+      "updatedAt": "2025-02-23T07:52:28.000Z"
+    },
+    "images": [
+      "https://i.imgur.com/QkIa5tT.jpeg",
+      "https://i.imgur.com/jb5Yu0h.jpeg",
+      "https://i.imgur.com/UlxxXyG.jpeg"
+    ],
+    "creationAt": "2025-02-23T07:52:28.000Z",
+    "updatedAt": "2025-02-23T07:52:28.000Z"
+  },
+  {
+    "id": 4,
+    "title": "Classic Grey Hooded Sweatshirt",
+    "slug": "classic-grey-hooded-sweatshirt",
+    "price": 90,
+    "description": "Elevate your casual wear with our Classic Grey Hooded Sweatshirt. Made from a soft cotton blend, this hoodie features a front kangaroo pocket, an adjustable drawstring hood, and ribbed cuffs for a snug fit. Perfect for those chilly evenings or lazy weekends, it pairs effortlessly with your favorite jeans or joggers.",
+    "category": {
+      "id": 1,
+      "name": "Clothes",
+      "slug": "clothes",
+      "image": "https://i.imgur.com/QkIa5tT.jpeg",
+      "creationAt": "2025-02-23T07:52:28.000Z",
+      "updatedAt": "2025-02-23T07:52:28.000Z"
+    },
+    "images": [
+      "https://i.imgur.com/R2PN9Wq.jpeg",
+      "https://i.imgur.com/IvxMPFr.jpeg",
+      "https://i.imgur.com/7eW9nXP.jpeg"
+    ],
+    "creationAt": "2025-02-23T07:52:28.000Z",
+    "updatedAt": "2025-02-23T07:52:28.000Z"
+  },
+  {
+    "id": 5,
+    "title": "Classic Black Hooded Sweatshirt",
+    "slug": "classic-black-hooded-sweatshirt",
+    "price": 79,
+    "description": "Elevate your casual wardrobe with our Classic Black Hooded Sweatshirt. Made from high-quality, soft fabric that ensures comfort and durability, this hoodie features a spacious kangaroo pocket and an adjustable drawstring hood. Its versatile design makes it perfect for a relaxed day at home or a casual outing.",
+    "category": {
+      "id": 1,
+      "name": "Clothes",
+      "slug": "clothes",
+      "image": "https://i.imgur.com/QkIa5tT.jpeg",
+      "creationAt": "2025-02-23T07:52:28.000Z",
+      "updatedAt": "2025-02-23T07:52:28.000Z"
+    },
+    "images": [
+      "https://i.imgur.com/cSytoSD.jpeg",
+      "https://i.imgur.com/WwKucXb.jpeg",
+      "https://i.imgur.com/cE2Dxh9.jpeg"
+    ],
+    "creationAt": "2025-02-23T07:52:28.000Z",
+    "updatedAt": "2025-02-23T07:52:28.000Z"
+  },
+]

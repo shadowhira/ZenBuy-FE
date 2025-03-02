@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/src/components/ui/button"
-import { getCategories } from "../apis"
+import { getCategories } from "../../../apis"
 import Image from "next/image"
 
 type Category = {
