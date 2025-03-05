@@ -1,6 +1,6 @@
-import OrderStatus from "@/src/components/orders/order-status"
-import UserProfile from "@/src/components/orders/user-profile"
-import OrderList from "@/src/components/orders/order-list"
+import OrderStatus from "@/components/orders/order-status"
+import UserProfile from "@/components/orders/user-profile"
+import OrderList from "@/components/orders/order-list"
 
 export default function OrdersPage() {
   return (

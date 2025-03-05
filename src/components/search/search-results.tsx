@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/src/components/ui/button"
-import { Slider } from "@/src/components/ui/slider"
-import { Checkbox } from "@/src/components/ui/checkbox"
-import ProductCard from "@/src/components/search/product-card"
+import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
+import { Checkbox } from "@/components/ui/checkbox"
+import ProductCard from "@/components/search/product-card"
 import { ChevronDown, ChevronUp } from "lucide-react"
 
 const categories = ["Electronics", "Clothing", "Home & Garden", "Sports", "Books"]

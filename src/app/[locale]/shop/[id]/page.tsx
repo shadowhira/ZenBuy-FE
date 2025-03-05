@@ -1,6 +1,6 @@
-import ShopHeader from "@/src/components/shop/shop-header"
-import ShopCategories from "@/src/components/shop/shop-categories"
-import ShopProducts from "@/src/components/shop/shop-products"
+import ShopHeader from "@/components/shop/shop-header"
+import ShopCategories from "@/components/shop/shop-categories"
+import ShopProducts from "@/components/shop/shop-products"
 
 export default function ShopPage({ params }: { params: { id: string } }) {
   // Fetch shop data using params.id

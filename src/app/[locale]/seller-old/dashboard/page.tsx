@@ -1,6 +1,6 @@
-import SellerStats from "@/src/components/seller/seller-stats"
-import RecentOrders from "@/src/components/seller/recent-orders"
-import TopProducts from "@/src/components/seller/top-products"
+import SellerStats from "@/components/seller/seller-stats"
+import RecentOrders from "@/components/seller/recent-orders"
+import TopProducts from "@/components/seller/top-products"
 
 export default function SellerDashboardPage() {
   return (

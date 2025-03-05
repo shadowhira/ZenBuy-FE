@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/src/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 const recentOrders = [
   { id: 1, product: "Smartphone", customer: "John Doe", total: "$599.99", status: "Shipped" },

@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/src/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 const topProducts = [
   { id: 1, name: "Smartphone X", sales: 1234, revenue: "$739,800" },

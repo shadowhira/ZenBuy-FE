@@ -1,6 +1,6 @@
-import CartItems from "@/src/components/cart/cart-items"
-import CartSummary from "@/src/components/cart/cart-summary"
-import RecommendedProducts from "@/src/components/cart/recommended-products"
+import CartItems from "@/components/cart/cart-items"
+import CartSummary from "@/components/cart/cart-summary"
+import RecommendedProducts from "@/components/cart/recommended-products"
 
 export default function CartPage() {
   return (

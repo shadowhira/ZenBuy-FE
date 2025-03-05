@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/src/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 const statuses = ["All", "Pending Payment", "Shipping", "Awaiting Delivery", "Completed", "Cancelled"]
 

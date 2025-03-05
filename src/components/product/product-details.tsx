@@ -3,8 +3,8 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Star, Truck, ShoppingCart } from "lucide-react"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 interface ProductDetailsProps {
   product: {

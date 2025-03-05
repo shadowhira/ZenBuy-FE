@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Button } from "@/src/components/ui/button"
-import ProductCard from "@/src/components/search/product-card"
-import { getProducts } from "@/src/apis"
+import { Button } from "@/components/ui/button"
+import ProductCard from "@/components/search/product-card"
+import { getProducts } from "@/apis"
 
 interface SimilarProductsProps {
   category: Category

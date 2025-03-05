@@ -1,4 +1,4 @@
-import ProductCard from "@/src/components/search/product-card"
+import ProductCard from "@/components/search/product-card"
 
 const products = [
   { id: 1, name: "Smartphone X", price: 599.99, image: "/product1.jpg", rating: 4 },

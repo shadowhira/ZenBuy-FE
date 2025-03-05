@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/src/components/ui/button"
-import ProductCard from "@/src/components/search/product-card"
+import { Button } from "@/components/ui/button"
+import ProductCard from "@/components/search/product-card"
 
 interface ShopProductsProps {
   shopName: string

@@ -1,13 +1,13 @@
 'use client';
 
-import Breadcrumb from "@/src/components/product/breadcrumb"
-import ProductDetails from "@/src/components/product/product-details"
-import ShopInfo from "@/src/components/product/shop-info"
-import ProductDescription from "@/src/components/product/product-description"
-import ProductReviews from "@/src/components/product/product-reviews"
-import ShopProducts from "@/src/components/product/shop-products"
-import SimilarProducts from "@/src/components/product/similar-products"
-import { getProductById } from "@/src/apis"
+import Breadcrumb from "@/components/product/breadcrumb"
+import ProductDetails from "@/components/product/product-details"
+import ShopInfo from "@/components/product/shop-info"
+import ProductDescription from "@/components/product/product-description"
+import ProductReviews from "@/components/product/product-reviews"
+import ShopProducts from "@/components/product/shop-products"
+import SimilarProducts from "@/components/product/similar-products"
+import { getProductById } from "@/apis"
 import { useEffect, useState } from "react"
 import React from "react";
 

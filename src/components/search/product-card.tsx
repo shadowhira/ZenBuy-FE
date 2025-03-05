@@ -1,5 +1,5 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@/src/components/ui/card"
-import { Button } from "@/src/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import Image from "next/image"
 interface ProductCardProps {
   product: Product
