@@ -1,16 +1,13 @@
-import SellerStats from "@/src/components/seller/seller-stats"
-import RecentOrders from "@/src/components/seller/recent-orders"
-import TopProducts from "@/src/components/seller/top-products"
+import RevenueChart from "@/components/seller/revenue-chart"
+import styles from "@/styles/seller.module.scss"
+import Dashboard from "@components/seller/dashboard"
 
-export default function SellerDashboardPage() {
+export default function DashboardPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold mb-8">Seller Dashboard</h1>
-      <SellerStats />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-        <RecentOrders />
-        <TopProducts />
-      </div>
+    <div className={styles.page}>
+      <h1 className={styles.pageTitle}>Seller Dashboard</h1>
+      <Dashboard />
+      <RevenueChart />
     </div>
   )
 }

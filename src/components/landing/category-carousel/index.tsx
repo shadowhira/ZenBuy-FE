@@ -2,10 +2,12 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/src/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { getCategories } from "../../../apis"
 import Image from "next/image"
 import { useTranslation } from "react-i18next"
+import styles from "@/styles/home.module.scss"
+import { cn } from "@/lib/utils"
 
 type Category = {
   id: number
@@ -60,7 +62,7 @@ export default function CategoryCarousel() {
           <div className="flex overflow-hidden">
             {getVisibleCategories().map((category, index) => (
               <div key={index} className="flex-shrink-0 w-1/6 px-2">
-                <div className="bg-secondary rounded-lg p-4 text-center">
+                <div className={cn("bg-secondary rounded-lg p-4 text-center", styles.categoryCard)}>
                   <Image src={category.image} alt={category.name} className="mb-2 w-full h-full rounded-lg" width={300} height={300} />
                   <div className="font-medium">{category.name}</div>
                 </div>

@@ -21,7 +21,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
+      // "@/*": ["./*"],
       "@components/*": ["src/components/*"],
       "@app/*": ["src/app/*"],
       "@utils/*": ["src/utils/*"],
@@ -30,7 +30,7 @@
       "@svg/*": ["public/svg/*"],
       "@videos/*": ["public/videos/*"],
       "@animations/*": ["src/styles/animations/*"],
-    }
+      "@/*": ["src/*"],}
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

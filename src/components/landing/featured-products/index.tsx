@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/src/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import { redirect } from "next/navigation"
-import { getProducts } from "@/src/apis"
+import { getProducts } from "@/apis"
 import { useTranslation } from "react-i18next"
+import styles from "@/styles/home.module.scss"
+import { cn } from "@/lib/utils"
 
 type Category = {
   id: number
@@ -65,7 +67,7 @@ export default function FeaturedProducts() {
         <div className="relative">
           <div className="flex space-x-4 justify-between h-[400px]">
             {displayedProducts.map((product) => (
-              <Card key={product.id} className="flex-grow flex flex-col cursor-pointer" onClick={() => onClick(product.id)}>
+              <Card key={product.id} className={cn("flex-grow flex flex-col cursor-pointer", styles.productCard)} onClick={() => onClick(product.id)}>
                 <CardHeader>
                   <Image
                     src={product.images[0] || ""}

@@ -2,10 +2,10 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import Navbar from "@/src/components/layout/navbar"
-import Footer from "@/src/components/layout/footer"
+import Navbar from "@/components/layout/navbar"
+import Footer from "@/components/layout/footer"
 import './globals.css'
-import i18nConfig from "@/i18nConfig"
+import i18nConfig from "@/../i18nConfig"
 import initTranslations from "./i18n"
 import { ReactNode } from "react"
 import { cookies } from "next/headers";

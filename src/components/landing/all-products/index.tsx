@@ -1,12 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card"
-import { Button } from "@/src/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { redirect } from "next/navigation"
-import { getProducts } from "@/src/apis"
+import { getProducts } from "@/apis"
 import { useTranslation } from "react-i18next"
+import styles from "@/styles/home.module.scss"
+import { cn } from "@/lib/utils"
 
 type Category = {
   id: number
@@ -54,7 +56,7 @@ export default function AllProducts() {
         <h2 className="text-3xl font-bold mb-6">{t('allProduct')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentProducts.map((product) => (
-            <Card key={product.id} className="flex flex-col h-full cursor-pointer" onClick={() => onClick(product.id)}>
+            <Card key={product.id} className={cn("flex flex-col h-full cursor-pointer", styles.productCard)} onClick={() => onClick(product.id)}>
               <CardHeader className="p-0">
                 <Image
                   src={product.images[0] || ""}
