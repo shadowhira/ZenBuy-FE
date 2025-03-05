@@ -52,9 +52,9 @@ export default async function RootLayout({
             namespaces={i18nNamespaces}
             resources={resources}
           >
-            <Navbar />
+            {/* <Navbar /> */}
             <main className="flex-grow">{children}</main>
-            <Footer />
+            {/* <Footer /> */}
           </TranslationsProvider>
         </div>
       </body>
