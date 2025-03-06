@@ -14,6 +14,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import logo from "@images/zenBuy.webp"
 import { redirect } from "next/navigation"
 import { useTranslation } from "react-i18next"
+import styles from "@/styles/navbar.module.scss"
+import { cn } from "@/lib/utils"
 
 type Category = {
   id: number
@@ -22,7 +24,7 @@ type Category = {
 }
 
 export default function Navbar() {
-  const { t } = useTranslation("navbar-general");
+  const { t } = useTranslation("navbar-general")
   const [openCategory, setOpenCategory] = useState<string | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -45,96 +47,89 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-background border-b">
-      <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div onClick={() => onGoSeller()} className="cursor-pointer w-full flex items-center space-x-2 text-sm font-medium text-muted-foreground hover:text-primary">
+    <nav className={styles.navbar}>
+      <div className={styles.container}>
+        <div onClick={() => onGoSeller()} className={styles.sellerChannel}>
           <span>{t('sellerChannel')}</span>
         </div>
-        <div className="flex justify-between h-16 gap-[20px] sm:gap-[50px] md:gap-[100px] lg:gap-[300px] xl:gap-[400px]">
-          <div className="flex items-center flex-grow">
-            <div className="flex-shrink-0 cursor-pointer mr-5" onClick={() => onGoHome()}>
-              <Image src={logo} alt="Zen Buy Logo" width={60} height={60} className="border-4 border-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full" />
-            </div>
-            <div 
-              className="relative group z-20 w-auto" 
-              onMouseEnter={() => setOpenCategory('products')} 
-              onMouseLeave={() => setOpenCategory(null)}
-            >
-              <button className="bg-none flex items-center space-x-1 text-sm font-medium text-muted-foreground hover:text-primary">
-                <span>{t('products')}</span>
-                <ChevronDown className="h-4 w-4" />
-              </button>
-              <div className={`absolute left-0 mt-2 w-56 transition duration-300 ease-in-out bg-background border rounded-md shadow-lg ${openCategory === 'products' ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
-                {categories.map((category) => (
-                  <div key={category.id} className="flex flex-row gap-2 width-full z-50 relative group/sub px-4 py-2 hover:bg-accent">
-                  <Image src={category.image} alt={category.name} className="w-8 h-8 rounded-sm" width={8} height={8} />
+        <div className={styles.mainNav}>
+          <div className={cn('hover:scale-110 transition"',styles.logo)} onClick={() => onGoHome()}>
+            <Image src={logo} alt="Zen Buy Logo" width={60} height={60} />
+          </div>
+          <div 
+            className={styles.productsDropdown}
+            onMouseEnter={() => setOpenCategory('products')} 
+            onMouseLeave={() => setOpenCategory(null)}
+          >
+            <button className={styles.dropdownButton}>
+              <span>{t('products')}</span>
+              <ChevronDown className="h-4 w-4" />
+            </button>
+            <div className={`${styles.dropdownContent} ${openCategory === 'products' ? styles.open : ''}`}>
+              {categories.map((category) => (
+                <div key={category.id} className={styles.categoryItem}>
+                  <Image src={category.image} alt={category.name} width={8} height={8} />
                   <span>{category.name}</span>
-                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className={styles.searchBar}>
+            <div className={styles.searchInput}>
+              <Input type="search" placeholder={t('searchProducts')} />
+              <Search className={styles.searchIcon} />
+            </div>
+          </div>
+          <div className={styles.cartDropdown}>
+            <DropdownMenu open={isCartOpen} onOpenChange={setIsCartOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  onMouseEnter={() => setIsCartOpen(true)}
+                  onMouseLeave={() => setIsCartOpen(false)}
+                  className={styles.cartButton}
+                >
+                  <ShoppingCart className="h-5 w-5 mr-2" />
+                  {t('cart')}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className={`${styles.cartContent} ${isCartOpen ? styles.open : ''}`}
+                onMouseEnter={() => setIsCartOpen(true)}
+                onMouseLeave={() => setIsCartOpen(false)}
+              >
+                {cartItems.map((item) => (
+                  <DropdownMenuItem key={item.id} className={styles.cartItem}>
+                    <Image
+                      src={item.images[0]}
+                      alt={item.title}
+                      width={40}
+                      height={40}
+                    />
+                    <div className={styles.itemDetails}>
+                      <p>{item.title}</p>
+                      <p className={styles.price}>1 x ${item.price}</p>
+                    </div>
+                  </DropdownMenuItem>
                 ))}
-              </div>
-            </div>
-            <div className="flex-grow mx-4">
-              <div className="relative">
-                <Input type="search" placeholder={t('searchProducts')} className="w-full pl-10" />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
+                <DropdownMenuItem>
+                  <Link href="/cart" className={styles.viewCartButton}>
+                    <Button className="w-full">{t('viewCart')}</Button>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-                <DropdownMenu open={isCartOpen} onOpenChange={setIsCartOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      onMouseEnter={() => setIsCartOpen(true)}
-                      onMouseLeave={() => setIsCartOpen(false)}
-                    >
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      {t('cart')}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className="w-80"
-                    onMouseEnter={() => setIsCartOpen(true)}
-                    onMouseLeave={() => setIsCartOpen(false)}
-                  >
-                    {cartItems.map((item) => (
-                      <DropdownMenuItem key={item.id}>
-                      <div className="flex items-center space-x-4">
-                        <Image
-                        src={item.images[0]}
-                        alt={item.title}
-                        width={40}
-                        height={40}
-                        className="rounded-md"
-                        />
-                        <div>
-                        <p className="font-semibold">{item.title}</p>
-                        <p className="text-sm text-gray-500">
-                          1 x ${item.price}
-                        </p>
-                        </div>
-                      </div>
-                      </DropdownMenuItem>
-                    ))}
-                    <DropdownMenuItem>
-                      <Link href="/cart" className="w-full">
-                        <Button className="w-full">{t('viewCart')}</Button>
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <ThemeChanger />
-            <LanguageChanger />
-          </div>
+          <Button variant="ghost" size="icon" className={styles.notificationButton}>
+            <Bell className="h-5 w-5" />
+          </Button>
+          <ThemeChanger />
+          <LanguageChanger />
         </div>
       </div>
     </nav>
-)}
+  )
+}
 
 // Mock data for cart items
 const cartItems = [
