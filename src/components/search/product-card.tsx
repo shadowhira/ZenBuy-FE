@@ -31,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const imageUrl =
     Array.isArray(product.images) && product.images.length > 0
       ? product.images[0]
-      : "/placeholder.svg?height=200&width=200"
+      : "https://th.bing.com/th?q=Sword+Cartoon+Vector&w=120&h=120&c=1&rs=1&qlt=90&cb=1&dpr=2&pid=InlineBlock&mkt=en-WW&cc=VN&setlang=en&adlt=strict&t=1&mw=247"
 
   return (
     <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">

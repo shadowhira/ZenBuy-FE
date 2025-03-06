@@ -1,11 +1,13 @@
+'use client'
+
 import ShopHeader from "@/components/shop/shop-header"
 import ShopCategories from "@/components/shop/shop-categories"
 import ShopProducts from "@/components/shop/shop-products"
 
-export default function ShopPage({ params }: { params: { id: string } }) {
+export default function ShopPage() {
   // Fetch shop data using params.id
   const shop = {
-    id: params.id,
+    id: 1,
     name: "Tech Haven",
     description: "Your one-stop shop for all things tech",
     banner: "https://th.bing.com/th/id/OIP.1Ij7KtBNY8Dkqm5oTmV2ygHaEK?w=308&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",

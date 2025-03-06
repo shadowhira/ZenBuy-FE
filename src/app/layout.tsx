@@ -14,7 +14,8 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Zen Buy",
   description: "Your one-stop shop for all things trendy and essential",
-    generator: 'v0.dev'
+  generator: 'v0.dev',
+  icons: "/favicon.png",
 }
 
 export function generateStaticParams() {
