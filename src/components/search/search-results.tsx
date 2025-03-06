@@ -5,87 +5,176 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import ProductCard from "@/components/search/product-card"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, ChevronUp, SlidersHorizontal, X } from "lucide-react"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useTranslation } from "react-i18next"
+import seedrandom from 'seedrandom';
 
 const categories = ["Electronics", "Clothing", "Home & Garden", "Sports", "Books"]
 const brands = ["Brand A", "Brand B", "Brand C", "Brand D", "Brand E"]
 
 export default function SearchResults() {
+  const { t } = useTranslation("searchPage");
   const [showFilters, setShowFilters] = useState(true)
   const [priceRange, setPriceRange] = useState([0, 1000])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
 
+  
   // Mock product data
+  const rng = seedrandom('my-fixed-seed'); // Sử dụng seed cố định
   const products = Array.from({ length: 12 }, (_, i) => ({
     id: i + 1,
-    name: `Product ${i + 1}`,
-    // price: Math.floor(Math.random() * 500) + 50,
-    image: `/product${(i % 8) + 1}.jpg`,
-    price: 500,
-    rating: 4,
-    // rating: Math.floor(Math.random() * 5) + 1,
-  }))
+    title: `Product ${i + 1}`,
+    price: Math.floor(rng() * 500) + 50, // Sử dụng rng() thay vì Math.random()
+    description: "Product description goes here",
+    category: { id: 1, name: categories[i % categories.length], image: "" },
+    images: [`https://picsum.photos/seed/${i}/200`],
+    rating: Math.floor(rng() * 5) + 1, // Sử dụng rng() thay vì Math.random()
+  }));
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],
+    )
+  }
+
+  const toggleBrand = (brand: string) => {
+    setSelectedBrands((prev) => (prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]))
+  }
+
+  const clearFilters = () => {
+    setSelectedCategories([])
+    setSelectedBrands([])
+    setPriceRange([0, 1000])
+  }
+
+  const FilterContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-lg">{t("filters")}</h3>
+        {(selectedCategories.length > 0 || selectedBrands.length > 0 || priceRange[0] > 0 || priceRange[1] < 1000) && (
+          <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8">
+            <X className="h-4 w-4 mr-1" /> {t("clearAll")}
+          </Button>
+        )}
+      </div>
+
+      <Accordion type="multiple" defaultValue={["categories", "price", "brands"]} className="w-full">
+        <AccordionItem value="categories">
+          <AccordionTrigger>{t("categories")}</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-2">
+              {categories.map((category) => (
+                <div key={category} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`category-${category}`}
+                    checked={selectedCategories.includes(category)}
+                    onCheckedChange={() => toggleCategory(category)}
+                  />
+                  <label htmlFor={`category-${category}`} className="text-sm font-medium">
+                    {t(category)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="price">
+          <AccordionTrigger>{t("priceRange")}</AccordionTrigger>
+          <AccordionContent>
+            <Slider min={0} max={1000} step={10} value={priceRange} onValueChange={setPriceRange} className="mb-6 pt-5" />
+            <div className="flex justify-between">
+              <span className="text-sm font-medium">${priceRange[0]}</span>
+              <span className="text-sm font-medium">${priceRange[1]}</span>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="brands">
+          <AccordionTrigger>{t("brands")}</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-2">
+              {brands.map((brand) => (
+                <div key={brand} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`brand-${brand}`}
+                    checked={selectedBrands.includes(brand)}
+                    onCheckedChange={() => toggleBrand(brand)}
+                  />
+                  <label htmlFor={`brand-${brand}`} className="text-sm font-medium">
+                    {t(brand)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
+  )
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="container mx-auto px-4 py-12">
       <div className="flex justify-between items-center mb-6">
-        <Button onClick={() => setShowFilters(!showFilters)} variant="outline">
+        <div className="flex items-center gap-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm" className="md:hidden">
+                <SlidersHorizontal className="h-4 w-4 mr-2" />
+                {t('filters')}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+              <FilterContent />
+            </SheetContent>
+          </Sheet>
+
+          <Button onClick={() => setShowFilters(!showFilters)} variant="outline" size="sm">
           {showFilters ? (
-            <>
-              <ChevronUp className="mr-2 h-4 w-4" /> Hide Filters
-            </>
+            <><ChevronUp className="mr-2 h-4 w-4" /> {t("hideFilters")}</>
           ) : (
-            <>
-              <ChevronDown className="mr-2 h-4 w-4" /> Show Filters
-            </>
+            <><ChevronDown className="mr-2 h-4 w-4" /> {t("showFilters")}</>
           )}
         </Button>
-        <Button variant="ghost">Clear Filters</Button>
-        <p className="text-muted-foreground">Showing 12 of 100 results</p>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium">{t('showingResults', {start:1, end:12, total:60})}</span>
+          </p>
+
+          <Select defaultValue="featured">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="featured">{t('featured')}</SelectItem>
+              <SelectItem value="price-low">{t('priceLowToHigh')}</SelectItem>
+              <SelectItem value="price-high">{t('priceHighToLow')}</SelectItem>
+              <SelectItem value="newest">{t('newestFirst')}</SelectItem>
+              <SelectItem value="rating">{t('highestRated')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
         {showFilters && (
-          <div className="w-full md:w-1/4 space-y-6">
-            <div>
-              <h3 className="font-semibold mb-2">Categories</h3>
-              {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
-                  <Checkbox id={category} />
-                  <label
-                    htmlFor={category}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {category}
-                  </label>
-                </div>
-              ))}
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Price Range</h3>
-              <Slider min={0} max={1000} step={10} value={priceRange} onValueChange={setPriceRange} className="mb-2" />
-              <div className="flex justify-between">
-                <span>${priceRange[0]}</span>
-                <span>${priceRange[1]}</span>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Brands</h3>
-              {brands.map((brand) => (
-                <div key={brand} className="flex items-center space-x-2">
-                  <Checkbox id={brand} />
-                  <label
-                    htmlFor={brand}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {brand}
-                  </label>
-                </div>
-              ))}
-            </div>
-
-            {/* Add more filter options here */}
+          <div className="hidden md:block w-full md:w-1/4">
+            <FilterContent />
           </div>
         )}
 
@@ -95,19 +184,45 @@ export default function SearchResults() {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-          <div className="mt-8 flex justify-center">
-            <Button variant="outline" className="mx-1">
-              Previous
-            </Button>
-            {[1, 2, 3, 4, 5].map((page) => (
-              <Button key={page} variant={page === 1 ? "default" : "outline"} className="mx-1">
-                {page}
-              </Button>
-            ))}
-            <Button variant="outline" className="mx-1">
-              Next
-            </Button>
-          </div>
+
+          <Pagination className="mt-8">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (currentPage > 1) setCurrentPage(currentPage - 1)
+                  }}
+                />
+              </PaginationItem>
+
+              {[1, 2, 3, 4, 5].map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    href="#"
+                    isActive={page === currentPage}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setCurrentPage(page)
+                    }}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (currentPage < 5) setCurrentPage(currentPage + 1)
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </div>
