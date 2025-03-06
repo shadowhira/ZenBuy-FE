@@ -27,7 +27,7 @@ interface RootLayoutProps {
   };
 }
 
-const i18nNamespaces = ['landing', '(default)'];
+const i18nNamespaces = ['landing', 'navbar-general', 'footer-general'];
 
 export default async function RootLayout({
   children,

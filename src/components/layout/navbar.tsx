@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import logo from "@images/zenBuy.webp"
 import { redirect } from "next/navigation"
-
+import { useTranslation } from "react-i18next"
 
 type Category = {
   id: number
@@ -22,6 +22,7 @@ type Category = {
 }
 
 export default function Navbar() {
+  const { t } = useTranslation("navbar-general");
   const [openCategory, setOpenCategory] = useState<string | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -47,7 +48,7 @@ export default function Navbar() {
     <nav className="bg-background border-b">
       <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div onClick={() => onGoSeller()} className="cursor-pointer w-full flex items-center space-x-2 text-sm font-medium text-muted-foreground hover:text-primary">
-          <span>Kênh người bán</span>
+          <span>{t('sellerChannel')}</span>
         </div>
         <div className="flex justify-between h-16 gap-[20px] sm:gap-[50px] md:gap-[100px] lg:gap-[300px] xl:gap-[400px]">
           <div className="flex items-center flex-grow">
@@ -60,7 +61,7 @@ export default function Navbar() {
               onMouseLeave={() => setOpenCategory(null)}
             >
               <button className="bg-none flex items-center space-x-1 text-sm font-medium text-muted-foreground hover:text-primary">
-                <span>Products</span>
+                <span>{t('products')}</span>
                 <ChevronDown className="h-4 w-4" />
               </button>
               <div className={`absolute left-0 mt-2 w-56 transition duration-300 ease-in-out bg-background border rounded-md shadow-lg ${openCategory === 'products' ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
@@ -74,7 +75,7 @@ export default function Navbar() {
             </div>
             <div className="flex-grow mx-4">
               <div className="relative">
-                <Input type="search" placeholder="Search for products..." className="w-full pl-10" />
+                <Input type="search" placeholder={t('searchProducts')} className="w-full pl-10" />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               </div>
             </div>
@@ -89,7 +90,7 @@ export default function Navbar() {
                       onMouseLeave={() => setIsCartOpen(false)}
                     >
                       <ShoppingCart className="h-5 w-5 mr-2" />
-                      Cart
+                      {t('cart')}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -118,7 +119,7 @@ export default function Navbar() {
                     ))}
                     <DropdownMenuItem>
                       <Link href="/cart" className="w-full">
-                        <Button className="w-full">View Cart</Button>
+                        <Button className="w-full">{t('viewCart')}</Button>
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
