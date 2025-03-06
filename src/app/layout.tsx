@@ -2,8 +2,6 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import Navbar from "@/components/layout/navbar"
-import Footer from "@/components/layout/footer"
 import './globals.css'
 import i18nConfig from "@/../i18nConfig"
 import initTranslations from "./i18n"
@@ -37,11 +35,7 @@ export default async function RootLayout({
 }: RootLayoutProps) {
   const cookieStore = cookies();
   const locale = (await cookieStore).get('NEXT_LOCALE')?.value || params.locale;
-  const { resources,  } = await initTranslations(locale, i18nNamespaces);
-
-  if (children === null || (children as any).type.name === 'notfound') {
-    return <html><body>{children}</body></html>;
-  }
+  const { resources  } = await initTranslations(locale, i18nNamespaces);
 
   return (
     <html lang={locale} >
@@ -52,9 +46,7 @@ export default async function RootLayout({
             namespaces={i18nNamespaces}
             resources={resources}
           >
-            {/* <Navbar /> */}
             <main className="flex-grow">{children}</main>
-            {/* <Footer /> */}
           </TranslationsProvider>
         </div>
       </body>

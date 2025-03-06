@@ -39,9 +39,16 @@ export default function Navbar() {
     redirect('/')
   }
 
+  const onGoSeller = () => {
+    redirect('/seller/inventory')
+  }
+
   return (
     <nav className="bg-background border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div onClick={() => onGoSeller()} className="cursor-pointer w-full flex items-center space-x-2 text-sm font-medium text-muted-foreground hover:text-primary">
+          <span>Kênh người bán</span>
+        </div>
         <div className="flex justify-between h-16 gap-[20px] sm:gap-[50px] md:gap-[100px] lg:gap-[300px] xl:gap-[400px]">
           <div className="flex items-center flex-grow">
             <div className="flex-shrink-0 cursor-pointer mr-5" onClick={() => onGoHome()}>
@@ -53,8 +60,8 @@ export default function Navbar() {
               onMouseLeave={() => setOpenCategory(null)}
             >
               <button className="bg-none flex items-center space-x-1 text-sm font-medium text-muted-foreground hover:text-primary">
-              <span>Products</span>
-              <ChevronDown className="h-4 w-4" />
+                <span>Products</span>
+                <ChevronDown className="h-4 w-4" />
               </button>
               <div className={`absolute left-0 mt-2 w-56 transition duration-300 ease-in-out bg-background border rounded-md shadow-lg ${openCategory === 'products' ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                 {categories.map((category) => (
@@ -71,61 +78,61 @@ export default function Navbar() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               </div>
             </div>
-        </div>
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-              <DropdownMenu open={isCartOpen} onOpenChange={setIsCartOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
+          </div>
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+                <DropdownMenu open={isCartOpen} onOpenChange={setIsCartOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      onMouseEnter={() => setIsCartOpen(true)}
+                      onMouseLeave={() => setIsCartOpen(false)}
+                    >
+                      <ShoppingCart className="h-5 w-5 mr-2" />
+                      Cart
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-80"
                     onMouseEnter={() => setIsCartOpen(true)}
                     onMouseLeave={() => setIsCartOpen(false)}
                   >
-                    <ShoppingCart className="h-5 w-5 mr-2" />
-                    Cart
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-80"
-                  onMouseEnter={() => setIsCartOpen(true)}
-                  onMouseLeave={() => setIsCartOpen(false)}
-                >
-                  {cartItems.map((item) => (
-                    <DropdownMenuItem key={item.id}>
-                    <div className="flex items-center space-x-4">
-                      <Image
-                      src={item.images[0]}
-                      alt={item.title}
-                      width={40}
-                      height={40}
-                      className="rounded-md"
-                      />
-                      <div>
-                      <p className="font-semibold">{item.title}</p>
-                      <p className="text-sm text-gray-500">
-                        1 x ${item.price}
-                      </p>
+                    {cartItems.map((item) => (
+                      <DropdownMenuItem key={item.id}>
+                      <div className="flex items-center space-x-4">
+                        <Image
+                        src={item.images[0]}
+                        alt={item.title}
+                        width={40}
+                        height={40}
+                        className="rounded-md"
+                        />
+                        <div>
+                        <p className="font-semibold">{item.title}</p>
+                        <p className="text-sm text-gray-500">
+                          1 x ${item.price}
+                        </p>
+                        </div>
                       </div>
-                    </div>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuItem>
+                      <Link href="/cart" className="w-full">
+                        <Button className="w-full">View Cart</Button>
+                      </Link>
                     </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuItem>
-                    <Link href="/cart" className="w-full">
-                      <Button className="w-full">View Cart</Button>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+            </Button>
+            <ThemeChanger />
+            <LanguageChanger />
           </div>
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5" />
-          </Button>
-          <ThemeChanger />
-          <LanguageChanger />
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 )}
 
 // Mock data for cart items

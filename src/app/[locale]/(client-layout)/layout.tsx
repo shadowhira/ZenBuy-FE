@@ -1,7 +1,6 @@
 import type React from "react"
 import Navbar from "@/components/layout/navbar"
 import Footer from "@/components/layout/footer"
-import '../../globals.css'
 import { ReactNode } from "react"
 
 interface RootLayoutProps {

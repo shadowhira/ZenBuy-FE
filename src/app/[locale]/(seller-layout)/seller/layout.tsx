@@ -1,23 +1,24 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import styles from "@/styles/seller.module.scss"
-import Sidebar from "@components/seller/sidebar"
-import Navbar from "@components/seller/navbar"
+import SellerNavbar from "@/components/seller/seller-navbar"
+import SellerSidebar from "@/components/seller/seller-sidebar"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className={styles.sellerLayout}>
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-      <div className={styles.mainContent}>
-        <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        <main className={styles.pageContent}>{children}</main>
-      </div>
-    </div>
+    <SidebarProvider defaultOpen={true} open={sidebarOpen} onOpenChange={setSidebarOpen}>
+      <SellerSidebar />
+      <SidebarInset>
+        <div className="flex h-16 items-center border-b">
+          <SellerNavbar />
+        </div>
+        <main className="p-4">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
 

@@ -9,12 +9,12 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
-                    <Navbar />
+        <Navbar />
         <Hero />
         <CategoryCarousel />
         <FeaturedProducts />
         <AllProducts />
-                    <Footer />
+        <Footer />
       </main>
     </div>
   )

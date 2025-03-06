@@ -51,6 +51,7 @@ export default function LanguageChanger() {
         <DropdownMenuItem onClick={() => handleChange('en')}>English</DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleChange('vi')}>Tiếng Việt</DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleChange('ja')}>日本語</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleChange('zh')}>中文</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
