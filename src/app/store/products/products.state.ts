@@ -18,21 +18,40 @@ export const useProductsState = () => {
   const state = useHookstate(globalProductsState)
 
   return {
-    // State
+    // State với getters và setters
     get products() {
       return state.products.value
     },
+    set products(value: Product[]) {
+      state.products.set(value)
+    },
+
     get featuredProducts() {
       return state.featuredProducts.value
     },
+    set featuredProducts(value: Product[]) {
+      state.featuredProducts.set(value)
+    },
+
     get currentProduct() {
       return state.currentProduct.value
     },
+    set currentProduct(value: Product | null) {
+      state.currentProduct.set(value)
+    },
+
     get isLoading() {
       return state.isLoading.value
     },
+    set isLoading(value: boolean) {
+      state.isLoading.set(value)
+    },
+
     get error() {
       return state.error.value
+    },
+    set error(value: string | null) {
+      state.error.set(value)
     },
 
     // Actions

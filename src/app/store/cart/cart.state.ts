@@ -16,15 +16,26 @@ export const useCartState = () => {
   const state = useHookstate(globalCartState)
 
   return {
-    // State
+    // State với getters và setters
     get items() {
       return state.items.value
     },
+    set items(value: CartItem[]) {
+      state.items.set(value)
+    },
+
     get isLoading() {
       return state.isLoading.value
     },
+    set isLoading(value: boolean) {
+      state.isLoading.set(value)
+    },
+
     get error() {
       return state.error.value
+    },
+    set error(value: string | null) {
+      state.error.set(value)
     },
 
     // Computed values
@@ -36,67 +47,89 @@ export const useCartState = () => {
     },
 
     // Actions
-    addItem: (item: Omit<CartItem, "id">) => {
+    addToCart: (item: Omit<CartItem, "id">) => {
       const existingItemIndex = state.items.value.findIndex(
-        (i) => i.productId === item.productId && i.variant === item.variant,
+        (cartItem) => cartItem.productId === item.productId && cartItem.variant === item.variant,
       )
 
       if (existingItemIndex >= 0) {
         // Update quantity if item already exists
-        const newQuantity = state.items[existingItemIndex].quantity.value + item.quantity
-        state.items[existingItemIndex].quantity.set(newQuantity)
+        const newItems = [...state.items.value]
+        newItems[existingItemIndex] = {
+          ...newItems[existingItemIndex],
+          quantity: newItems[existingItemIndex].quantity + item.quantity,
+        }
+        state.items.set(newItems)
       } else {
         // Add new item
         const newItem: CartItem = {
           ...item,
-          id: Date.now().toString(),
+          id: `cart-item-${Date.now()}`,
         }
         state.items.set([...state.items.value, newItem])
       }
-
-      // Save to localStorage
-      localStorage.setItem("cart", JSON.stringify(state.items.value))
     },
 
-    updateQuantity: (itemId: string, quantity: number) => {
-      const itemIndex = state.items.value.findIndex((i) => i.id === itemId)
+    updateCartItem: (id: string, quantity: number) => {
+      const itemIndex = state.items.value.findIndex((item) => item.id === id)
       if (itemIndex >= 0) {
-        if (quantity <= 0) {
-          // Remove item if quantity is 0 or negative
-          const newItems = state.items.value.filter((item) => item.id !== itemId)
-          state.items.set(newItems)
-        } else {
-          // Update quantity
-          state.items[itemIndex].quantity.set(quantity)
+        const newItems = [...state.items.value]
+        newItems[itemIndex] = {
+          ...newItems[itemIndex],
+          quantity,
         }
-
-        // Save to localStorage
-        localStorage.setItem("cart", JSON.stringify(state.items.value))
+        state.items.set(newItems)
       }
     },
 
-    removeItem: (itemId: string) => {
-      const newItems = state.items.value.filter((item) => item.id !== itemId)
-      state.items.set(newItems)
-
-      // Save to localStorage
-      localStorage.setItem("cart", JSON.stringify(state.items.value))
+    removeCartItem: (id: string) => {
+      state.items.set(state.items.value.filter((item) => item.id !== id))
     },
 
     clearCart: () => {
       state.items.set([])
-      localStorage.removeItem("cart")
     },
 
-    loadCart: () => {
-      const storedCart = localStorage.getItem("cart")
-      if (storedCart) {
-        try {
-          const items = JSON.parse(storedCart) as CartItem[]
-          state.items.set(items)
-        } catch (error) {
-          localStorage.removeItem("cart")
-        }
+    fetchCart: async () => {
+      try {
+        state.isLoading.set(true)
+        state.error.set(null)
+
+        // Simulate API call
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        // Mock cart data
+        const mockCartItems: CartItem[] = [
+          {
+            id: "cart-1",
+            productId: "product-1",
+            name: "Product 1",
+            price: 19.99,
+            quantity: 2,
+            image: "/product1.jpg",
+            variant: "Red",
+          },
+          {
+            id: "cart-2",
+            productId: "product-2",
+            name: "Product 2",
+            price: 29.99,
+            quantity: 1,
+            image: "/product2.jpg",
+          },
+        ]
+
+        state.items.set(mockCartItems)
+        state.isLoading.set(false)
+
+        return mockCartItems
+      } catch (error) {
+        state.set({
+          ...state.value,
+          error: error instanceof Error ? error.message : "An error occurred",
+          isLoading: false,
+        })
+        return []
       }
     },
   }

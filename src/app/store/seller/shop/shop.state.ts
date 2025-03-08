@@ -16,15 +16,26 @@ export const useShopState = () => {
   const state = useHookstate(globalShopState)
 
   return {
-    // State
+    // State với getters và setters
     get details() {
       return state.details.value
     },
+    set details(value: ShopDetails | null) {
+      state.details.set(value)
+    },
+
     get isLoading() {
       return state.isLoading.value
     },
+    set isLoading(value: boolean) {
+      state.isLoading.set(value)
+    },
+
     get error() {
       return state.error.value
+    },
+    set error(value: string | null) {
+      state.error.set(value)
     },
 
     // Actions
@@ -36,22 +47,22 @@ export const useShopState = () => {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        // Mock shop details
-        const mockShopDetails: ShopDetails = {
+        // Mock shop data
+        const mockShop: ShopDetails = {
           id: "shop-1",
-          name: "Tech Haven",
-          description: "Your one-stop shop for all things tech",
+          name: "Tech Store",
+          description: "Your one-stop shop for all tech needs",
           bannerImage: "/shop-banner.jpg",
           avatarImage: "/shop-avatar.jpg",
           featuredProducts: ["/product1.jpg", "/product2.jpg", "/product3.jpg"],
-          followers: 5678,
+          followers: 1234,
           rating: 4.8,
         }
 
-        state.details.set(mockShopDetails)
+        state.details.set(mockShop)
         state.isLoading.set(false)
 
-        return mockShopDetails
+        return mockShop
       } catch (error) {
         state.set({
           ...state.value,
@@ -70,17 +81,19 @@ export const useShopState = () => {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        if (state.details.value) {
-          state.details.set({
-            ...state.details.value,
-            ...updates,
-          })
-          state.isLoading.set(false)
-
-          return state.details.value
-        } else {
+        if (!state.details.value) {
           throw new Error("Shop details not found")
         }
+
+        const updatedShop: ShopDetails = {
+          ...state.details.value,
+          ...updates,
+        }
+
+        state.details.set(updatedShop)
+        state.isLoading.set(false)
+
+        return updatedShop
       } catch (error) {
         state.set({
           ...state.value,

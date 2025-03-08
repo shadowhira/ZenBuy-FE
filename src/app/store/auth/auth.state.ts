@@ -21,14 +21,29 @@ export const useAuthState = () => {
     get user() {
       return state.user.value
     },
+    set user(value: User | null) {
+      state.user.set(value)
+    },
+
     get isAuthenticated() {
       return state.isAuthenticated.value
     },
+    set isAuthenticated(value: boolean) {
+      state.isAuthenticated.set(value)
+    },
+
     get isLoading() {
       return state.isLoading.value
     },
+    set isLoading(value: boolean) {
+      state.isLoading.set(value)
+    },
+
     get error() {
       return state.error.value
+    },
+    set error(value: string | null) {
+      state.error.set(value)
     },
 
     // Actions
@@ -40,7 +55,8 @@ export const useAuthState = () => {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        // Mock successful login
+        // Sử dụng React Query hook thay vì gọi API trực tiếp
+        // Đây chỉ là code tương thích ngược
         if (email === "user@example.com" && password === "password") {
           const user: User = {
             id: "1",
@@ -78,12 +94,13 @@ export const useAuthState = () => {
     },
 
     logout: () => {
+      localStorage.removeItem("user")
       state.set({
-        ...state.value,
         user: null,
         isAuthenticated: false,
+        isLoading: false,
+        error: null,
       })
-      localStorage.removeItem("user")
     },
 
     register: async (name: string, email: string, password: string) => {
@@ -94,9 +111,8 @@ export const useAuthState = () => {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        // Mock successful registration
         const user: User = {
-          id: Date.now().toString(),
+          id: "1",
           name,
           email,
           role: "customer",
@@ -123,44 +139,53 @@ export const useAuthState = () => {
     },
 
     checkAuth: () => {
-      const storedUser = localStorage.getItem("user")
-      if (storedUser) {
+      const userStr = localStorage.getItem("user")
+      if (userStr) {
         try {
-          const user = JSON.parse(storedUser) as User
+          const user = JSON.parse(userStr) as User
           state.set({
-            ...state.value,
             user,
             isAuthenticated: true,
+            isLoading: false,
+            error: null,
           })
+          return true
         } catch (error) {
           localStorage.removeItem("user")
+          state.set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null,
+          })
+          return false
         }
       }
+      return false
     },
 
     updateProfile: async (userData: Partial<User>) => {
       try {
         state.isLoading.set(true)
+        state.error.set(null)
 
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
         if (state.user.value) {
-          state.user.set({
+          const updatedUser = {
             ...state.user.value,
             ...userData,
-          })
-        }
+          }
 
-        state.isLoading.set(false)
+          state.user.set(updatedUser)
+          state.isLoading.set(false)
 
-        // Update localStorage
-        const updatedUser = state.user.value
-        if (updatedUser) {
+          // Update in localStorage
           localStorage.setItem("user", JSON.stringify(updatedUser))
+          return true
         }
-
-        return true
+        return false
       } catch (error) {
         state.set({
           ...state.value,

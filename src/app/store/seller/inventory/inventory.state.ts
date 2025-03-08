@@ -16,15 +16,26 @@ export const useInventoryState = () => {
   const state = useHookstate(globalInventoryState)
 
   return {
-    // State
+    // State với getters và setters
     get items() {
       return state.items.value
     },
+    set items(value: InventoryItem[]) {
+      state.items.set(value)
+    },
+
     get isLoading() {
       return state.isLoading.value
     },
+    set isLoading(value: boolean) {
+      state.isLoading.set(value)
+    },
+
     get error() {
       return state.error.value
+    },
+    set error(value: string | null) {
+      state.error.set(value)
     },
 
     // Computed values

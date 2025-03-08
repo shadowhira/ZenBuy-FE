@@ -17,18 +17,33 @@ export const useOrdersState = () => {
   const state = useHookstate(globalOrdersState)
 
   return {
-    // State
+    // State với getters và setters
     get orders() {
       return state.orders.value
     },
+    set orders(value: Order[]) {
+      state.orders.set(value)
+    },
+
     get currentOrder() {
       return state.currentOrder.value
     },
+    set currentOrder(value: Order | null) {
+      state.currentOrder.set(value)
+    },
+
     get isLoading() {
       return state.isLoading.value
     },
+    set isLoading(value: boolean) {
+      state.isLoading.set(value)
+    },
+
     get error() {
       return state.error.value
+    },
+    set error(value: string | null) {
+      state.error.set(value)
     },
 
     // Computed values
