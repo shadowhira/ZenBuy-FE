@@ -4,9 +4,9 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import i18nConfig from '../../../i18nConfig';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@components/ui/dropdown-menu"
 import { Globe } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@components/ui/button"
 
 export default function LanguageChanger() {
   const { i18n } = useTranslation();

@@ -1,13 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Slider } from "@/components/ui/slider"
-import { Checkbox } from "@/components/ui/checkbox"
-import ProductCard from "@/components/search/product-card"
+import { Button } from "@components/ui/button"
+import { Slider } from "@components/ui/slider"
+import { Checkbox } from "@components/ui/checkbox"
+import ProductCard from "@components/search/product-card"
 import { ChevronDown, ChevronUp, SlidersHorizontal, X } from "lucide-react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 import {
   Pagination,
   PaginationContent,
@@ -15,8 +15,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+} from "@components/ui/pagination"
+import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet"
 import { useTranslation } from "react-i18next"
 import seedrandom from 'seedrandom';
 

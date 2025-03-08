@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { inventoryService } from "@/services/inventory.service"
 import { useInventoryState } from "@/store"
-import { queryClient } from "@/services/query-client"
+import { queryClient } from "@app/services/query-client"
 
 export function useInventory(page = 1, limit = 20) {
   const inventoryState = useInventoryState()

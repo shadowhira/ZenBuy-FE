@@ -1,7 +1,7 @@
 "use client"
 
-import SalesAnalysis from "@/components/seller/sales-analysis"
-import styles from "@/styles/seller.module.scss"
+import SalesAnalysis from "@components/seller/sales-analysis"
+import styles from "@styles/seller.module.scss"
 
 export default function AnalyticsPage() {
   return (

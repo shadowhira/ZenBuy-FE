@@ -1,8 +1,8 @@
 'use client'
 
-import ShopHeader from "@/components/shop/shop-header"
-import ShopCategories from "@/components/shop/shop-categories"
-import ShopProducts from "@/components/shop/shop-products"
+import ShopHeader from "@components/shop/shop-header"
+import ShopCategories from "@components/shop/shop-categories"
+import ShopProducts from "@components/shop/shop-products"
 
 export default function ShopPage() {
   // Fetch shop data using params.id

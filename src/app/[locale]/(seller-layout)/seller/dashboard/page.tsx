@@ -1,5 +1,5 @@
-import RevenueChart from "@/components/seller/revenue-chart"
-import styles from "@/styles/seller.module.scss"
+import RevenueChart from "@components/seller/revenue-chart"
+import styles from "@styles/seller.module.scss"
 import Dashboard from "@components/seller/dashboard"
 
 export default function DashboardPage() {

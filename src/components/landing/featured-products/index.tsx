@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@components/ui/card"
 import Image from "next/image"
 import { redirect } from "next/navigation"
-import { getProducts } from "@/apis"
 import { useTranslation } from "react-i18next"
-import styles from "@/styles/home.module.scss"
-import { cn } from "@/lib/utils"
+import styles from "@styles/home.module.scss"
+import { cn } from "@lib/utils"
+import { getProducts } from "src/apis"
 
 type Category = {
   id: number

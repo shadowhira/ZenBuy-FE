@@ -1,14 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@components/ui/card"
+import { Button } from "@components/ui/button"
 import Image from "next/image"
 import { redirect } from "next/navigation"
-import { getProducts } from "@/apis"
+import { getProducts } from "src/apis"
 import { useTranslation } from "react-i18next"
-import styles from "@/styles/home.module.scss"
-import { cn } from "@/lib/utils"
+import styles from "@styles/home.module.scss"
+import { cn } from "@lib/utils"
 
 type Category = {
   id: number

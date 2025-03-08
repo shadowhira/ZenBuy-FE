@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { cartService } from "@/services/cart.service"
 import { useCartState } from "@/store"
-import { queryClient } from "@/services/query-client"
+import { queryClient } from "@app/services/query-client"
 
 export function useCart() {
   const cartState = useCartState()

@@ -2,12 +2,12 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@components/ui/button"
 import { getCategories } from "../../../apis"
 import Image from "next/image"
 import { useTranslation } from "react-i18next"
-import styles from "@/styles/home.module.scss"
-import { cn } from "@/lib/utils"
+import styles from "@styles/home.module.scss"
+import { cn } from "@lib/utils"
 
 type Category = {
   id: number

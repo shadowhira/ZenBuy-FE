@@ -3,9 +3,9 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Trash2, Minus, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@components/ui/button"
+import { Checkbox } from "@components/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 
 // Mock data for cart items
 const cartItems = [

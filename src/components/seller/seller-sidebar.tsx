@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "@/components/ui/sidebar"
+} from "@components/ui/sidebar"
 import { redirect } from "next/navigation"
 import Image from "next/image"
 import logo from "@images/zenBuy.webp"

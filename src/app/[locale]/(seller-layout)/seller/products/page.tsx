@@ -1,5 +1,5 @@
-import ProductForm from "@/components/seller/product-form"
-import styles from "@/styles/seller.module.scss"
+import ProductForm from "@components/seller/product-form"
+import styles from "@styles/seller.module.scss"
 
 export default function ProductsPage() {
   return (

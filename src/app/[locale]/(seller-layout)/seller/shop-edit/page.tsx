@@ -1,4 +1,4 @@
-import styles from "@/styles/seller.module.scss"
+import styles from "@styles/seller.module.scss"
 import ShopEditForm from "@components/seller/shop-edit-form"
 
 export default function ShopEditPage() {

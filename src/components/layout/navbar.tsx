@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from "react"
 import { Bell, ChevronDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import LanguageChanger from "../utils/languague-changer"
 import ThemeChanger from "../utils/theme-changer"
-import { getCategories } from "@/apis"
 import Link from "next/link"
 import { ShoppingCart, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import logo from "@images/zenBuy.webp"
 import { redirect } from "next/navigation"
 import { useTranslation } from "react-i18next"
-import styles from "@/styles/navbar.module.scss"
-import { cn } from "@/lib/utils"
+import styles from "@styles/navbar.module.scss"
+import { Input } from "@components/ui/input"
+import { cn } from "@lib/utils"
+import { getCategories } from "src/apis"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@components/ui/dropdown-menu"
+import { Button } from "@components/ui/button"
 
 type Category = {
   id: number

@@ -1,8 +1,8 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { authService } from "@/services/auth.service"
 import { useAuthState } from "@/store"
-import { queryClient } from "@/services/query-client"
 import type { User } from "@/store/auth/auth.types"
+import { queryClient } from "@app/services/query-client"
 
 export interface LoginRequest {
   email: string

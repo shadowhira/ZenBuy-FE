@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { DollarSign, Package, ShoppingCart, TrendingUp, Users } from "lucide-react"
-import RevenueChart from "@/components/seller/revenue-chart"
-import styles from "@/styles/seller.module.scss"
+import RevenueChart from "@components/seller/revenue-chart"
+import styles from "@styles/seller.module.scss"
 
 export default function Dashboard() {
   return (

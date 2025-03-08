@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { Bar, Line } from "react-chartjs-2"
 import {
   Chart as ChartJS,
@@ -14,8 +14,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
-import { Button } from "@/components/ui/button"
-import styles from "@/styles/seller.module.scss"
+import { Button } from "@components/ui/button"
+import styles from "@styles/seller.module.scss"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend)
 

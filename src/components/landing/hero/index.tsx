@@ -1,10 +1,10 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@components/ui/button"
 import { redirect } from 'next/navigation';
 import { useTranslation } from "react-i18next";
-import styles from "@/styles/home.module.scss"
-import { cn } from "@/lib/utils";
+import styles from "@styles/home.module.scss"
+import { cn } from "@lib/utils";
 
 export default function Hero() {
   const { t } = useTranslation("landing");

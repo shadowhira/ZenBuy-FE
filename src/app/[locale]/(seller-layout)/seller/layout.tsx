@@ -2,9 +2,9 @@
 
 import type React from "react"
 import { useState } from "react"
-import SellerNavbar from "@/components/seller/seller-navbar"
-import SellerSidebar from "@/components/seller/seller-sidebar"
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+import SellerNavbar from "@components/seller/seller-navbar"
+import SellerSidebar from "@components/seller/seller-sidebar"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@components/ui/sidebar"
 
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)

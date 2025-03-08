@@ -1,5 +1,5 @@
-import SearchHero from "@/components/search/search-hero"
-import SearchResults from "@/components/search/search-results"
+import SearchHero from "@components/search/search-hero"
+import SearchResults from "@components/search/search-results"
 
 export default function SearchPage() {
   return (

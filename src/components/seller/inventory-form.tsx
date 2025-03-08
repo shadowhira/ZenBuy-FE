@@ -3,13 +3,13 @@
 import { useState } from "react"
 import { ArrowRight, Barcode, Package, RefreshCw, Save } from 'lucide-react'
 
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import { Input } from "@components/ui/input"
+import { Button } from "@components/ui/button"
+import { Label } from "@components/ui/label"
+import { Textarea } from "@components/ui/textarea"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@components/ui/card"
+import { Separator } from "@components/ui/separator"
 import BarcodeScannerCamera from "@components/bar-code/scanner-camera"
 import BarcodeScannerImage from "@components/bar-code/scanner-image"
 

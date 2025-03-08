@@ -1,8 +1,8 @@
 'use client';
 
 import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@components/ui/button";
+import { Separator } from "@components/ui/separator";
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {

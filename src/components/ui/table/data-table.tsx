@@ -1,13 +1,13 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Button } from '@components/ui/button';
+import { ScrollArea, ScrollBar } from '@components/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select';
+} from '@components/ui/select';
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table';
+} from '@components/ui/table';
 import {
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon

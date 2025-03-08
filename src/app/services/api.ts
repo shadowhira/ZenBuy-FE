@@ -1,5 +1,5 @@
 // Định nghĩa base URL cho API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.zenbuy.com"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:3000/api"
 
 // Hàm helper để xử lý fetch request
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {

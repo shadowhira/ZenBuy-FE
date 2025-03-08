@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { shopService } from "@/services/shop.service"
 import { useShopState } from "@/store"
-import { queryClient } from "@/services/query-client"
+import { queryClient } from "@services/query-client"
 
 export function useShopDetails() {
   const shopState = useShopState()

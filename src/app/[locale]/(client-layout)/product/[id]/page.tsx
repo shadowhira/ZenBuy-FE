@@ -1,15 +1,15 @@
 'use client';
 
-import Breadcrumb from "@/components/product/breadcrumb"
-import ProductDetails from "@/components/product/product-details"
-import ShopInfo from "@/components/product/shop-info"
-import ProductDescription from "@/components/product/product-description"
-import ProductReviews from "@/components/product/product-reviews"
-import ShopProducts from "@/components/product/shop-products"
-import SimilarProducts from "@/components/product/similar-products"
-import { getProductById } from "@/apis"
+import Breadcrumb from "@components/product/breadcrumb"
+import ProductDetails from "@components/product/product-details"
+import ShopInfo from "@components/product/shop-info"
+import ProductDescription from "@components/product/product-description"
+import ProductReviews from "@components/product/product-reviews"
+import ShopProducts from "@components/product/shop-products"
+import SimilarProducts from "@components/product/similar-products"
 import { useEffect, useState } from "react"
 import React from "react";
+import { getProductById } from "src/apis";
 
 type Category = {
   id: number

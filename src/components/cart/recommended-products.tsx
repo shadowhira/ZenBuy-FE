@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import ProductCard from "@/components/search/product-card"
+import { Button } from "@components/ui/button"
+import ProductCard from "@components/search/product-card"
 
 const recommendedProducts = [
   { id: 1, name: "Recommended Product 1", price: 29.99, image: "/product1.jpg", rating: 4 },

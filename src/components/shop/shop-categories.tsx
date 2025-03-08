@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@components/ui/button"
 
 const categories = ["All Products", "Smartphones", "Laptops", "Accessories", "Smart Home", "Audio", "Wearables"]
 

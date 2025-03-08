@@ -5,12 +5,12 @@ import { BrowserMultiFormatReader } from "@zxing/library"
 import { FileUp, Loader2, Upload } from 'lucide-react'
 import Image from "next/image"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
+import { Button } from "@components/ui/button"
+import { Input } from "@components/ui/input"
+import { Alert, AlertDescription } from "@components/ui/alert"
+import { Badge } from "@components/ui/badge"
+import { Separator } from "@components/ui/separator"
 
 export interface BarcodeData {
   productName: string

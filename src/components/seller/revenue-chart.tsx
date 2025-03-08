@@ -12,8 +12,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
-import { Button } from "@/components/ui/button"
-import styles from "@/styles/seller.module.scss"
+import { Button } from "@components/ui/button"
+import styles from "@styles/seller.module.scss"
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 

@@ -1,6 +1,6 @@
 import { Bell, Settings, User } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import styles from "@/styles/seller.module.scss"
+import { Button } from "@components/ui/button"
+import styles from "@styles/seller.module.scss"
 import { SidebarTrigger } from "@components/ui/sidebar"
 
 export default function SellerNavbar() {
