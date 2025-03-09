@@ -1,10 +1,12 @@
-import { Star } from "lucide-react"
+import { Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ProductReviewsProps {
-  productId: number
+  productId: number;
 }
 
 export default function ProductReviews({ productId }: ProductReviewsProps) {
+  const { t } = useTranslation("detail-product");
   // Fetch reviews based on productId
   const reviews = [
     { id: 1, user: "John Doe", rating: 5, comment: "Great product! Highly recommended." },
@@ -13,7 +15,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
+      <h2 className="text-2xl font-bold mb-4">{t("customerReviews")}</h2>
       {reviews.map((review) => (
         <div key={review.id} className="border-b py-4">
           <div className="flex items-center">
@@ -32,6 +34,6 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
         </div>
       ))}
     </div>
-  )
+  );
 }
 

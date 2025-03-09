@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@components/ui/button"
 import ProductCard from "@components/search/product-card"
 import { getProducts } from "src/apis"
+import { useTranslation } from "react-i18next"
 
 interface SimilarProductsProps {
   category: Category
@@ -25,6 +26,7 @@ type Product = {
 }
 
 export default function SimilarProducts({ category }: SimilarProductsProps) {
+  const { t } = useTranslation("detail-product")
   const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 8
   const [similarProducts, setSimilarProducts] = useState<Product[]>([])
@@ -48,7 +50,7 @@ export default function SimilarProducts({ category }: SimilarProductsProps) {
 
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-4">Similar Products</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('similarProducts')}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />

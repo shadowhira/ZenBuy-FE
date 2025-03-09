@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 interface BreadcrumbProps {
   category: Category
@@ -14,13 +15,15 @@ type Category = {
 }
 
 export default function Breadcrumb({ category, subcategory, productName }: BreadcrumbProps) {
+  const { t } = useTranslation("detail-product")
   const { name: categoryName } = category
+
   return (
     <nav className="flex" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
         <li className="inline-flex items-center">
           <Link href="/" className="text-gray-700 hover:text-blue-600">
-            Home
+            {t("home")}
           </Link>
         </li>
         <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -46,4 +49,3 @@ export default function Breadcrumb({ category, subcategory, productName }: Bread
     </nav>
   )
 }
-

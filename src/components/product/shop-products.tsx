@@ -4,12 +4,14 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@components/ui/button"
 import ProductCard from "@components/search/product-card"
+import { useTranslation } from "react-i18next"
 
 interface ShopProductsProps {
   shopName: string
 }
 
 export default function ShopProducts({ shopName }: ShopProductsProps) {
+  const { t } = useTranslation("detail-product")
   const [page, setPage] = useState(0)
   const productsPerPage = 4
 
@@ -28,7 +30,7 @@ export default function ShopProducts({ shopName }: ShopProductsProps) {
 
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-4">More from this shop</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('moreFromThisShop')}</h2>
       <div className="relative px-[15px]">
         <div className="flex space-x-4 overflow-x-auto overflow-hidden p-10">
           {displayedProducts.map((product) => (

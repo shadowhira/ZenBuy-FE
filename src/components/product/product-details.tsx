@@ -6,6 +6,7 @@ import VanillaTilt from "vanilla-tilt"; // Import vanilla-tilt
 import { Star, Truck, ShoppingCart } from "lucide-react";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
+import { useTranslation } from "react-i18next";
 
 interface ProductDetailsProps {
   product: {
@@ -18,6 +19,7 @@ interface ProductDetailsProps {
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
+  const { t } = useTranslation("detail-product");
   const [mainImage, setMainImage] = useState(product.images[0]);
   const [quantity, setQuantity] = useState(1);
 
@@ -82,16 +84,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               fill="currentColor"
             />
           ))}
-          <span className="ml-2 text-sm text-gray-500">({product.reviews} reviews)</span>
+          <span className="ml-2 text-sm text-gray-500">
+            ({product.reviews} {t("reviews")})
+          </span>
         </div>
         <p className="text-2xl font-bold mt-4">${product.price.toFixed(2)}</p>
         <div className="flex items-center mt-4">
           <Truck className="h-5 w-5 mr-2" />
-          <span>Free shipping</span>
+          <span>{t("freeShipping")}</span>
         </div>
         <div className="mt-6">
           <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-            Quantity
+            {t("quantity")}
           </label>
           <Input
             type="number"
@@ -103,9 +107,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           />
         </div>
         <div className="mt-6 space-x-4 flex">
-          <Button size="lg">Buy Now</Button>
+          <Button size="lg">{t("buyNow")}</Button>
           <Button size="lg" variant="outline">
-            <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+            <ShoppingCart className="mr-2 h-4 w-4" /> {t("addToCart")}
           </Button>
         </div>
       </div>
