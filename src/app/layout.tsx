@@ -29,7 +29,7 @@ interface RootLayoutProps {
   };
 }
 
-const i18nNamespaces = ['landing', 'navbar-general', 'footer-general', "searchPage", "detail-product"];
+const i18nNamespaces = ['landing', 'navbar-general', 'footer-general', "searchPage", "detail-product", "shopPage"];
 
 export default async function RootLayout({
   children,
