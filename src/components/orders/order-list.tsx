@@ -1,5 +1,8 @@
+'use client'
+
 import { Button } from "@components/ui/button"
 import Image from "next/image"
+import { redirect } from "next/navigation"
 
 const orders = [
   {
@@ -20,6 +23,10 @@ const orders = [
 ]
 
 export default function OrderList() {
+  const onGoShop = () => {
+    redirect('/shop/1')
+  }
+
   return (
     <div className="space-y-8">
       {orders.map((order) => (
@@ -28,20 +35,20 @@ export default function OrderList() {
             <h3 className="text-lg font-semibold">{order.shop}</h3>
             <div className="space-x-2">
               <Button variant="outline">Message Shop</Button>
-              <Button variant="outline">View Shop</Button>
+              <Button onClick={onGoShop} variant="outline">View Shop</Button>
             </div>
           </div>
           <p className="mb-4">
             Status: <span className="font-semibold">{order.status}</span>
           </p>
           {order.products.map((product) => (
-            <div key={product.id} className="flex items-center space-x-4 mb-4">
+            <div key={product.id} className="flex items-center justify-start gap-[50px] space-x-4 mb-4">
               <Image
                 src={product.image || "/placeholder.svg"}
                 alt={product.name}
                 width={80}
                 height={80}
-                className="rounded-md"
+                className="rounded-md flex-shrink-0 w-[50%] border-primary max-h-[300px]"
               />
               <div>
                 <h4 className="font-semibold">{product.name}</h4>

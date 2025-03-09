@@ -34,9 +34,9 @@ export default function RecommendedProducts() {
     <div className="mt-12">
       <h2 className="text-2xl font-bold mb-4">You May Also Like</h2>
       <div className="relative">
-        <div className="flex space-x-4 overflow-hidden">
+        <div className="flex justify-center space-x-4 overflow-x-auto overflow-hidden p-10">
           {recommendedProducts.slice(startIndex, startIndex + productsToShow).map((product) => (
-            <div key={product.id} className="w-1/4 flex-shrink-0">
+            <div key={product.id} className="w-64 flex-shrink-0">
               <ProductCard product={product} />
             </div>
           ))}

@@ -82,6 +82,15 @@ body {
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  .tilt-container {
+    perspective: 1000px; /* Tạo chiều sâu cho hiệu ứng 3D */
+    display: inline-block; /* Đảm bảo container chỉ bao quanh ảnh */
+  }
+  
+  .tilt-container img {
+    transition: transform 0.5s ease; /* Hiệu ứng chuyển đổi mượt mà */
+    border-radius: 10px; /* Bo góc cho ảnh */
+  }
 }
 
 @layer base {

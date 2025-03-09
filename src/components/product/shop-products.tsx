@@ -29,8 +29,8 @@ export default function ShopProducts({ shopName }: ShopProductsProps) {
   return (
     <div className="mt-12">
       <h2 className="text-2xl font-bold mb-4">More from this shop</h2>
-      <div className="relative">
-        <div className="flex space-x-4 overflow-x-auto">
+      <div className="relative px-[15px]">
+        <div className="flex space-x-4 overflow-x-auto overflow-hidden p-10">
           {displayedProducts.map((product) => (
             <div key={product.id} className="w-64 flex-shrink-0">
               <ProductCard product={product} />

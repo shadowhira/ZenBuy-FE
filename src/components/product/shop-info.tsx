@@ -1,6 +1,7 @@
 import { MessageCircle, Store, Star } from "lucide-react"
 import { Button } from "@components/ui/button"
 import Image from "next/image"
+import { redirect } from "next/navigation"
 
 interface ShopInfoProps {
   shop: {
@@ -10,6 +11,10 @@ interface ShopInfoProps {
 }
 
 export default function ShopInfo({ shop }: ShopInfoProps) {
+  const onGoShop = () => {
+    redirect('/shop/1')
+  }
+
   return (
     <div className="mt-12 p-6 border rounded-lg">
       <div className="flex items-center">
@@ -31,7 +36,7 @@ export default function ShopInfo({ shop }: ShopInfoProps) {
           <Button variant="outline">
             <MessageCircle className="mr-2 h-4 w-4" /> Chat Now
           </Button>
-          <Button>
+          <Button onClick={onGoShop}>
             <Store className="mr-2 h-4 w-4" /> View Shop
           </Button>
         </div>

@@ -10,8 +10,8 @@ import { Textarea } from "@components/ui/textarea"
 
 export default function EditProfileForm() {
   const [formData, setFormData] = useState({
-    name: "John Doe",
-    email: "john@example.com",
+    name: "Goku",
+    email: "goku@example.com",
     phone: "123-456-7890",
     address: "123 Main St, City, Country",
     bio: "I love shopping on Zen Buy!",

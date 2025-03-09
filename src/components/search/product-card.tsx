@@ -5,6 +5,7 @@ import { Star, ShoppingCart } from "lucide-react"
 import Image from "next/image"
 import { cn } from "@lib/utils"
 import { useTranslation } from "react-i18next"
+import { redirect } from "next/navigation"
 
 interface ProductCardProps {
   product: Product
@@ -33,8 +34,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       ? product.images[0]
       : "https://th.bing.com/th?q=Sword+Cartoon+Vector&w=120&h=120&c=1&rs=1&qlt=90&cb=1&dpr=2&pid=InlineBlock&mkt=en-WW&cc=VN&setlang=en&adlt=strict&t=1&mw=247"
 
+  const onGoProduct = () => {
+    redirect(`/product/${product.id}`)
+  }
+
   return (
-    <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
+    <Card onClick={onGoProduct} className="overflow-hidden transition-all duration-200 hover:shadow-md cursor-pointer hover:scale-105 hover:border-primary">
       <CardHeader className="p-0">
         <div className="relative h-48 w-full">
           <Image

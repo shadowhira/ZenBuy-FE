@@ -112,9 +112,12 @@ export default function Navbar() {
                     </div>
                   </DropdownMenuItem>
                 ))}
-                <DropdownMenuItem>
+                <DropdownMenuItem className="flex justify-between">
                   <Link href="/cart" className={styles.viewCartButton}>
                     <Button className="w-full">{t('viewCart')}</Button>
+                  </Link>
+                  <Link href="/orders" className={styles.viewCartButton}>
+                    <Button className="w-full">{t('viewOrderStatus')}</Button>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
