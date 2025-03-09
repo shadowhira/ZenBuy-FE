@@ -1,5 +1,6 @@
 import { Button } from "@components/ui/button"
 import { Star } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 interface ShopHeaderProps {
   shop: {
@@ -13,6 +14,8 @@ interface ShopHeaderProps {
 }
 
 export default function ShopHeader({ shop }: ShopHeaderProps) {
+  const { t } = useTranslation("shopPage")
+
   return (
     <div className="relative">
       <div className="h-64 bg-cover bg-center" style={{ backgroundImage: `url(${shop.banner})` }}></div>
@@ -31,8 +34,8 @@ export default function ShopHeader({ shop }: ShopHeaderProps) {
               <p className="text-sm text-gray-500">{shop.description}</p>
             </div>
             <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <Button>Follow</Button>
-              <Button variant="outline">Message</Button>
+              <Button>{t("follow")}</Button>
+              <Button variant="outline">{t("message")}</Button>
             </div>
           </div>
         </div>
@@ -43,11 +46,10 @@ export default function ShopHeader({ shop }: ShopHeaderProps) {
           </div>
           <div>
             <span className="font-medium">{shop.followers}</span>
-            <span className="text-gray-500"> followers</span>
+            <span className="text-gray-500"> {t("followers")}</span>
           </div>
         </div>
       </div>
     </div>
   )
 }
-
