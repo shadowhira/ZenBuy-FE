@@ -1,23 +1,10 @@
-export interface Product {
-  id: string
-  name: string
-  description: string
-  price: number
-  images: string[]
-  category: string
-  subcategory?: string
-  subsubcategory?: string
-  rating: number
-  reviews: number
-  shopId: string
-  shopName: string
-}
+import type { Product } from "src/types";
 
 export interface ProductsState {
-  products: Product[]
-  featuredProducts: Product[]
-  currentProduct: Product | null
-  isLoading: boolean
-  error: string | null
+  products: Product[];
+  featuredProducts: Product[];
+  currentProduct: Product | null;
+  isLoading: boolean;
+  error: string | null;
 }
 

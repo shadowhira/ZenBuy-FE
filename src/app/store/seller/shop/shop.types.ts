@@ -1,17 +1,7 @@
-export interface ShopDetails {
-  id: string
-  name: string
-  description: string
-  bannerImage: string
-  avatarImage: string
-  featuredProducts: string[]
-  followers: number
-  rating: number
-}
+import type { Shop } from "src/types";
 
-export interface ShopState {
-  details: ShopDetails | null
-  isLoading: boolean
-  error: string | null
-}
-
+export interface SellerState {
+  shop: Shop | null;
+  isLoading: boolean;
+  error: string | null;
+} 

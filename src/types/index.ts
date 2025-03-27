@@ -63,4 +63,67 @@ export interface CartItem {
   productId: number;
   variantId?: number;
   quantity: number;
+  name: string;
+  price: number;
+  image?: string;
+}
+
+export interface Shop {
+  id: number;
+  name: string;
+  description: string;
+  logo: string;
+  products: Product[];
+  rating: number;
+  followers: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CartResponse {
+  items: CartItem[];
+  total: number;
+}
+
+export interface CreateOrderRequest {
+  items: {
+    productId: number;
+    quantity: number;
+  }[];
+  shippingAddress: ShippingAddress;
+  paymentMethod: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  role: "customer" | "seller" | "admin";
+}
+
+export interface InventoryItem {
+  id: string;
+  productName: string;
+  sku: string;
+  quantity: number;
+  unitPrice: number;
+  supplier: string;
+  notes?: string;
+  images: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DailySales {
+  date: string;
+  revenue: number;
+  orders: number;
+}
+
+export interface ProductSales {
+  productId: string;
+  productName: string;
+  quantity: number;
+  revenue: number;
 } 

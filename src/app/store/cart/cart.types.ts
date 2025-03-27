@@ -1,16 +1,8 @@
-export interface CartItem {
-  id: string
-  productId: string
-  name: string
-  price: number
-  quantity: number
-  image: string
-  variant?: string
-}
+import type { CartItem } from "src/types";
 
 export interface CartState {
-  items: CartItem[]
-  isLoading: boolean
-  error: string | null
+  items: CartItem[];
+  isLoading: boolean;
+  error: string | null;
 }
 

@@ -7,12 +7,12 @@ export { useAnalyticsState } from "./seller/analytics/analytics.state"
 export { useShopState } from "./seller/shop/shop.state"
 export { useOrdersState } from "./orders/orders.state"
 
-// Export types
-export type { User, AuthState } from "./auth/auth.types"
-export type { CartItem, CartState } from "./cart/cart.types"
-export type { Product, ProductsState } from "./products/products.types"
-export type { InventoryItem, InventoryState } from "./seller/inventory/inventory.types"
-export type { DailySales, ProductSales, AnalyticsState } from "./seller/analytics/analytics.types"
-export type { ShopDetails, ShopState } from "./seller/shop/shop.types"
-export type { OrderItem, Order, OrdersState } from "./orders/orders.types"
+// Export state types
+export type { AuthState } from "./auth/auth.types"
+export type { CartState } from "./cart/cart.types"
+export type { ProductsState } from "./products/products.types"
+export type { InventoryState } from "./seller/inventory/inventory.types"
+export type { AnalyticsState } from "./seller/analytics/analytics.types"
+export type { SellerState } from "./seller/shop/shop.types"
+export type { OrdersState } from "./orders/orders.types"
 

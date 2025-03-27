@@ -1,15 +1,9 @@
-export interface User {
-  id: string
-  name: string
-  email: string
-  avatar?: string
-  role: "customer" | "seller" | "admin"
-}
+import type { User } from "src/types";
 
 export interface AuthState {
-  user: User | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  error: string | null
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
 }
 
