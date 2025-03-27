@@ -1,14 +1,14 @@
-import { CartItem } from '../types';
+import { CartItem, CartResponse } from '../types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.escuelajs.co/api/v1';
 
-export async function getCart(): Promise<CartItem[]> {
+export async function getCart(): Promise<CartResponse> {
   const response = await fetch(`${API_BASE_URL}/cart`);
   if (!response.ok) throw new Error('Failed to fetch cart');
   return response.json();
 }
 
-export async function addToCart(item: CartItem): Promise<CartItem[]> {
+export async function addToCart(item: CartItem): Promise<CartResponse> {
   const response = await fetch(`${API_BASE_URL}/cart`, {
     method: 'POST',
     headers: {
@@ -20,19 +20,19 @@ export async function addToCart(item: CartItem): Promise<CartItem[]> {
   return response.json();
 }
 
-export async function updateCartItem(item: CartItem): Promise<CartItem[]> {
-  const response = await fetch(`${API_BASE_URL}/cart/${item.productId}`, {
+export async function updateCartItem(params: { itemId: string; data: { quantity: number } }): Promise<CartResponse> {
+  const response = await fetch(`${API_BASE_URL}/cart/${params.itemId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(item),
+    body: JSON.stringify(params.data),
   });
   if (!response.ok) throw new Error('Failed to update cart item');
   return response.json();
 }
 
-export async function removeFromCart(productId: number): Promise<CartItem[]> {
+export async function removeFromCart(productId: number): Promise<CartResponse> {
   const response = await fetch(`${API_BASE_URL}/cart/${productId}`, {
     method: 'DELETE',
   });
