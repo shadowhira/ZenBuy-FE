@@ -211,3 +211,8 @@ export async function getUserOrdersPaginated(id: number, offset: number, limit: 
   const response = await fetch(`https://api.escuelajs.co/api/v1/users/${id}/orders?offset=${offset}&limit=${limit}`);
   return response.json();
 }
+
+export * from './products';
+export * from './categories';
+export * from './orders';
+export * from './cart';

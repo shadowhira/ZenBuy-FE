@@ -19,7 +19,7 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       // "@/*": ["./*"],
       "@components/*": ["src/components/*"],
@@ -27,13 +27,14 @@
       "@lib/*": ["src/lib/*"],
       "@styles/*": ["src/styles/*"],
       "@images/*": ["public/images/*"],
+      "@types/*": ["src/types/*"],
       "@svg/*": ["public/svg/*"],
       "@videos/*": ["public/videos/*"],
       "@animations/*": ["src/styles/animations/*"],
       "@hooks/*": ["src/app/hooks/*"],
       "@services/*": ["src/app/services/*"],
       "@store/*": ["src/app/store/*"],
-      "@api/*": ["src/app/api/*"],
+      "@apis/*": ["src/app/api/*"],
       "@app/*": ["src/app/*"],
       "@/*": ["src/app/*"],
     }
