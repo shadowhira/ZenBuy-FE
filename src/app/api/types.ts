@@ -13,10 +13,9 @@ export interface RegisterRequest {
 export interface AuthResponse {
   user: {
     id: string;
-    name: string;
     email: string;
-    role: "customer" | "seller" | "admin";
-    avatar?: string;
+    name: string;
+    role: 'customer' | 'seller';
   };
   token: string;
 }
@@ -141,4 +140,32 @@ export interface InventoryItem {
   images: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+// API Response Types
+export interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface AnalyticsSummary {
+  totalOrders: number;
+  totalRevenue: number;
+  averageOrderValue: number;
+  ordersByStatus: {
+    pending: number;
+    processing: number;
+    shipped: number;
+    delivered: number;
+    cancelled: number;
+  };
 } 

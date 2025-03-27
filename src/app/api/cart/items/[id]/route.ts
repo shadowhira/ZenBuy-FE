@@ -1,45 +1,57 @@
 import { NextResponse } from "next/server"
+import { z } from "zod"
 import { getAuthUser } from "@lib/auth-utils"
 import { getCart, saveCart } from "@lib/cart-utils"
+import { Cart } from "../../../types"
+import { handleError } from "../../../error"
+import { logger } from "@lib/logger"
+
+const updateCartItemSchema = z.object({
+  quantity: z.number().int().positive(),
+})
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const user = await getAuthUser(request)
 
     if (!user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+      return NextResponse.json(
+        { error: "Không có quyền truy cập" },
+        { status: 401 }
+      )
     }
 
-    const itemId = params.id
     const body = await request.json()
-    const { quantity } = body
+    const validatedData = updateCartItemSchema.parse(body)
 
-    // Lấy giỏ hàng hiện tại
+    // Lấy giỏ hàng
     const cart = await getCart(user.id)
 
-    // Tìm sản phẩm trong giỏ hàng
-    const itemIndex = cart.items.findIndex((item) => item.id === itemId)
+    // Tìm sản phẩm cần cập nhật
+    const itemIndex = cart.items.findIndex((item) => item.id === params.id)
 
     if (itemIndex === -1) {
-      return NextResponse.json({ message: "Item not found in cart" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Không tìm thấy sản phẩm trong giỏ hàng" },
+        { status: 404 }
+      )
     }
 
-    // Cập nhật số lượng
-    cart.items[itemIndex].quantity = quantity
+    // Cập nhật số lượng sản phẩm
+    cart.items[itemIndex] = {
+      ...cart.items[itemIndex],
+      quantity: validatedData.quantity,
+    }
 
-    // Lưu giỏ hàng
     await saveCart(user.id, cart)
 
-    return NextResponse.json(
-      {
-        items: cart.items,
-        totalItems: cart.items.reduce((total, item) => total + item.quantity, 0),
-        totalPrice: cart.items.reduce((total, item) => total + item.price * item.quantity, 0),
-      },
-      { status: 200 },
+    logger.info(
+      `Cập nhật số lượng sản phẩm ${params.id} thành ${validatedData.quantity}`
     )
+
+    return NextResponse.json(cart)
   } catch (error) {
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    return handleError(error)
   }
 }
 
@@ -48,30 +60,34 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     const user = await getAuthUser(request)
 
     if (!user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+      return NextResponse.json(
+        { error: "Không có quyền truy cập" },
+        { status: 401 }
+      )
     }
 
-    const itemId = params.id
-
-    // Lấy giỏ hàng hiện tại
+    // Lấy giỏ hàng
     const cart = await getCart(user.id)
 
-    // Xóa sản phẩm khỏi giỏ hàng
-    cart.items = cart.items.filter((item) => item.id !== itemId)
+    // Tìm sản phẩm cần xóa
+    const itemIndex = cart.items.findIndex((item) => item.id === params.id)
 
-    // Lưu giỏ hàng
+    if (itemIndex === -1) {
+      return NextResponse.json(
+        { error: "Không tìm thấy sản phẩm trong giỏ hàng" },
+        { status: 404 }
+      )
+    }
+
+    // Xóa sản phẩm
+    cart.items.splice(itemIndex, 1)
     await saveCart(user.id, cart)
 
-    return NextResponse.json(
-      {
-        items: cart.items,
-        totalItems: cart.items.reduce((total, item) => total + item.quantity, 0),
-        totalPrice: cart.items.reduce((total, item) => total + item.price * item.quantity, 0),
-      },
-      { status: 200 },
-    )
+    logger.info(`Xóa sản phẩm ${params.id} khỏi giỏ hàng`)
+
+    return NextResponse.json(cart)
   } catch (error) {
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    return handleError(error)
   }
 }
 
