@@ -1,5 +1,7 @@
 import { hookstate, useHookstate } from "@hookstate/core"
-import type { InventoryState, InventoryItem } from "./inventory.types"
+import type { InventoryState } from "./inventory.types"
+import { getInventory, addInventoryItem, updateInventoryItem, deleteInventoryItem } from "../../../../apis/inventory"
+import type { InventoryItem } from "../../../../types"
 
 // Initial state
 const initialState: InventoryState = {
@@ -11,6 +13,12 @@ const initialState: InventoryState = {
 // Create the global state
 const globalInventoryState = hookstate<InventoryState>(initialState)
 
+// Helper function to convert immutable inventory item to mutable
+const convertInventoryItem = (item: any): InventoryItem => ({
+  ...item,
+  images: item.images ? [...item.images] : []
+})
+
 // Create hooks and actions
 export const useInventoryState = () => {
   const state = useHookstate(globalInventoryState)
@@ -18,21 +26,21 @@ export const useInventoryState = () => {
   return {
     // State với getters và setters
     get items() {
-      return state.items.value
+      return state.items.get().map(convertInventoryItem)
     },
     set items(value: InventoryItem[]) {
       state.items.set(value)
     },
 
     get isLoading() {
-      return state.isLoading.value
+      return state.isLoading.get()
     },
     set isLoading(value: boolean) {
       state.isLoading.set(value)
     },
 
     get error() {
-      return state.error.value
+      return state.error.get()
     },
     set error(value: string | null) {
       state.error.set(value)
@@ -40,13 +48,13 @@ export const useInventoryState = () => {
 
     // Computed values
     get totalItems() {
-      return state.items.value.length
+      return state.items.get().length
     },
     get totalValue() {
-      return state.items.value.reduce((total, item) => total + item.unitPrice * item.quantity, 0)
+      return state.items.get().reduce((total, item) => total + item.unitPrice * item.quantity, 0)
     },
     get lowStockItems() {
-      return state.items.value.filter((item) => item.quantity < 10)
+      return state.items.get().filter((item) => item.quantity < 10)
     },
 
     // Actions
@@ -55,30 +63,14 @@ export const useInventoryState = () => {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Mock inventory data
-        const mockInventory: InventoryItem[] = Array.from({ length: 15 }, (_, i) => ({
-          id: `inv-${i + 1}`,
-          productName: `Product ${i + 1}`,
-          sku: `SKU-${1000 + i}`,
-          quantity: Math.floor(Math.random() * 100) + 1,
-          unitPrice: Math.floor(Math.random() * 100) + 10,
-          supplier: `Supplier ${(i % 5) + 1}`,
-          notes: i % 3 === 0 ? `Notes for product ${i + 1}` : undefined,
-          images: [`/product${(i % 8) + 1}.jpg`],
-          createdAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
-          updatedAt: new Date().toISOString(),
-        }))
-
-        state.items.set(mockInventory)
+        const items = await getInventory()
+        state.items.set(items)
         state.isLoading.set(false)
 
-        return mockInventory
+        return items
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
@@ -91,23 +83,14 @@ export const useInventoryState = () => {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        const newItem: InventoryItem = {
-          ...item,
-          id: `inv-${Date.now()}`,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
-
-        state.items.set([...state.items.value, newItem])
+        const newItem = await addInventoryItem(item)
+        state.items.set([...state.items.get(), newItem])
         state.isLoading.set(false)
 
         return newItem
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
@@ -115,38 +98,19 @@ export const useInventoryState = () => {
       }
     },
 
-    updateInventoryItem: async (
-      id: string,
-      updates: Partial<Omit<InventoryItem, "id" | "createdAt" | "updatedAt">>,
-    ) => {
+    updateInventoryItem: async (id: string, updates: Partial<Omit<InventoryItem, "id" | "createdAt" | "updatedAt">>) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        const updatedItem = await updateInventoryItem(id, updates)
+        state.items.set(state.items.get().map(item => item.id === id ? updatedItem : item))
+        state.isLoading.set(false)
 
-        const itemIndex = state.items.value.findIndex((item) => item.id === id)
-        if (itemIndex >= 0) {
-          const updatedItem = {
-            ...state.items[itemIndex].value,
-            ...updates,
-            updatedAt: new Date().toISOString(),
-          }
-
-          const newItems = [...state.items.value]
-          newItems[itemIndex] = updatedItem
-
-          state.items.set(newItems)
-          state.isLoading.set(false)
-
-          return updatedItem
-        } else {
-          throw new Error("Inventory item not found")
-        }
+        return updatedItem
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
@@ -159,17 +123,14 @@ export const useInventoryState = () => {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        const newItems = state.items.value.filter((item) => item.id !== id)
-        state.items.set(newItems)
+        await deleteInventoryItem(id)
+        state.items.set(state.items.get().filter(item => item.id !== id))
         state.isLoading.set(false)
 
         return true
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
@@ -194,10 +155,10 @@ export const useInventoryState = () => {
         }
 
         // Add to inventory
-        return await this.addInventoryItem(newItem)
+        return await addInventoryItem(newItem)
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })

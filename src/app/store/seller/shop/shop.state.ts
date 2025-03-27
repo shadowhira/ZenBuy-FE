@@ -1,5 +1,7 @@
 import { hookstate, useHookstate } from "@hookstate/core"
-import type { ShopState, ShopDetails } from "./shop.types"
+import type { ShopState } from "./shop.types"
+import { getShopById, updateShop } from "../../../../apis/shops"
+import type { Shop, Product } from "../../../../types"
 
 // Initial state
 const initialState: ShopState = {
@@ -11,6 +13,16 @@ const initialState: ShopState = {
 // Create the global state
 const globalShopState = hookstate<ShopState>(initialState)
 
+// Helper function to convert immutable product to mutable
+const convertProduct = (product: any): Product => ({
+  ...product,
+  category: {
+    ...product.category,
+    children: product.category.children ? [...product.category.children] : undefined
+  },
+  variants: product.variants ? [...product.variants] : undefined
+})
+
 // Create hooks and actions
 export const useShopState = () => {
   const state = useHookstate(globalShopState)
@@ -18,54 +30,45 @@ export const useShopState = () => {
   return {
     // State với getters và setters
     get details() {
-      return state.details.value
+      const shop = state.details.get()
+      if (!shop) return null
+      return {
+        ...shop,
+        products: shop.products.map(convertProduct)
+      }
     },
-    set details(value: ShopDetails | null) {
+    set details(value: Shop | null) {
       state.details.set(value)
     },
 
     get isLoading() {
-      return state.isLoading.value
+      return state.isLoading.get()
     },
     set isLoading(value: boolean) {
       state.isLoading.set(value)
     },
 
     get error() {
-      return state.error.value
+      return state.error.get()
     },
     set error(value: string | null) {
       state.error.set(value)
     },
 
     // Actions
-    fetchShopDetails: async () => {
+    fetchShopDetails: async (shopId: number) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Mock shop data
-        const mockShop: ShopDetails = {
-          id: "shop-1",
-          name: "Tech Store",
-          description: "Your one-stop shop for all tech needs",
-          bannerImage: "/shop-banner.jpg",
-          avatarImage: "/shop-avatar.jpg",
-          featuredProducts: ["/product1.jpg", "/product2.jpg", "/product3.jpg"],
-          followers: 1234,
-          rating: 4.8,
-        }
-
-        state.details.set(mockShop)
+        const shop = await getShopById(shopId)
+        state.details.set(shop)
         state.isLoading.set(false)
 
-        return mockShop
+        return shop
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
@@ -73,30 +76,23 @@ export const useShopState = () => {
       }
     },
 
-    updateShopDetails: async (updates: Partial<Omit<ShopDetails, "id">>) => {
+    updateShopDetails: async (shopId: number, updates: Partial<Shop>) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        if (!state.details.value) {
+        if (!state.details.get()) {
           throw new Error("Shop details not found")
         }
 
-        const updatedShop: ShopDetails = {
-          ...state.details.value,
-          ...updates,
-        }
-
+        const updatedShop = await updateShop(shopId, updates)
         state.details.set(updatedShop)
         state.isLoading.set(false)
 
         return updatedShop
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })

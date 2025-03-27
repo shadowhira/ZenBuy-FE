@@ -1,5 +1,7 @@
 import { hookstate, useHookstate } from "@hookstate/core"
-import type { AnalyticsState, DailySales, ProductSales } from "./analytics.types"
+import type { AnalyticsState } from "./analytics.types"
+import { getAnalytics } from "../../../../apis/analytics"
+import type { DailySales, ProductSales } from "../../../../types"
 
 // Initial state
 const initialState: AnalyticsState = {
@@ -13,6 +15,9 @@ const initialState: AnalyticsState = {
 // Create the global state
 const globalAnalyticsState = hookstate<AnalyticsState>(initialState)
 
+// Helper function to convert immutable arrays to mutable
+const convertArray = <T>(arr: readonly T[]): T[] => [...arr]
+
 // Create hooks and actions
 export const useAnalyticsState = () => {
   const state = useHookstate(globalAnalyticsState)
@@ -20,35 +25,35 @@ export const useAnalyticsState = () => {
   return {
     // State với getters và setters
     get dailySales() {
-      return state.dailySales.value
+      return convertArray(state.dailySales.get())
     },
     set dailySales(value: DailySales[]) {
       state.dailySales.set(value)
     },
 
     get productSales() {
-      return state.productSales.value
+      return convertArray(state.productSales.get())
     },
     set productSales(value: ProductSales[]) {
       state.productSales.set(value)
     },
 
     get timeFrame() {
-      return state.timeFrame.value
+      return state.timeFrame.get()
     },
     set timeFrame(value: "day" | "3days" | "week" | "month") {
       state.timeFrame.set(value)
     },
 
     get isLoading() {
-      return state.isLoading.value
+      return state.isLoading.get()
     },
     set isLoading(value: boolean) {
       state.isLoading.set(value)
     },
 
     get error() {
-      return state.error.value
+      return state.error.get()
     },
     set error(value: string | null) {
       state.error.set(value)
@@ -56,10 +61,10 @@ export const useAnalyticsState = () => {
 
     // Computed values
     get totalRevenue() {
-      return state.dailySales.value.reduce((total, day) => total + day.revenue, 0)
+      return state.dailySales.get().reduce((total, day) => total + day.revenue, 0)
     },
     get totalOrders() {
-      return state.dailySales.value.reduce((total, day) => total + day.orders, 0)
+      return state.dailySales.get().reduce((total, day) => total + day.orders, 0)
     },
     get averageOrderValue() {
       const totalOrders = this.totalOrders
@@ -73,58 +78,18 @@ export const useAnalyticsState = () => {
         state.error.set(null)
         state.timeFrame.set(timeFrame)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Generate mock data based on timeFrame
-        let days: number
-        switch (timeFrame) {
-          case "day":
-            days = 1
-            break
-          case "3days":
-            days = 3
-            break
-          case "week":
-            days = 7
-            break
-          case "month":
-            days = 30
-            break
-          default:
-            days = 7
-        }
-
-        // Mock daily sales data
-        const mockDailySales: DailySales[] = Array.from({ length: days }, (_, i) => {
-          const date = new Date()
-          date.setDate(date.getDate() - (days - i - 1))
-          return {
-            date: date.toISOString().split("T")[0],
-            revenue: Math.floor(Math.random() * 5000) + 1000,
-            orders: Math.floor(Math.random() * 50) + 10,
-          }
-        })
-
-        // Mock product sales data
-        const mockProductSales: ProductSales[] = Array.from({ length: 10 }, (_, i) => ({
-          productId: `product-${i + 1}`,
-          productName: `Product ${i + 1}`,
-          quantity: Math.floor(Math.random() * 100) + 10,
-          revenue: Math.floor(Math.random() * 10000) + 1000,
-        }))
-
-        state.dailySales.set(mockDailySales)
-        state.productSales.set(mockProductSales)
+        const { dailySales, productSales } = await getAnalytics(timeFrame)
+        state.dailySales.set(dailySales)
+        state.productSales.set(productSales)
         state.isLoading.set(false)
 
         return {
-          dailySales: mockDailySales,
-          productSales: mockProductSales,
+          dailySales,
+          productSales,
         }
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })

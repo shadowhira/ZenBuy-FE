@@ -1,5 +1,7 @@
 import { hookstate, useHookstate } from "@hookstate/core"
-import type { OrdersState, Order } from "./orders.types"
+import type { OrdersState } from "./orders.types"
+import { getOrders, getOrderById, createOrder, updateOrderStatus } from "../../../apis/orders"
+import type { Order, ShippingAddress } from "../../../types"
 
 // Initial state
 const initialState: OrdersState = {
@@ -12,6 +14,22 @@ const initialState: OrdersState = {
 // Create the global state
 const globalOrdersState = hookstate<OrdersState>(initialState)
 
+// Helper function to convert immutable order to mutable
+const convertOrder = (order: any): Order => ({
+  ...order,
+  items: order.items.map((item: any) => ({
+    ...item,
+    product: {
+      ...item.product,
+      category: {
+        ...item.product.category,
+        children: item.product.category.children ? [...item.product.category.children] : undefined
+      },
+      variants: item.product.variants ? [...item.product.variants] : undefined
+    }
+  }))
+})
+
 // Create hooks and actions
 export const useOrdersState = () => {
   const state = useHookstate(globalOrdersState)
@@ -19,28 +37,29 @@ export const useOrdersState = () => {
   return {
     // State với getters và setters
     get orders() {
-      return state.orders.value
+      return state.orders.get().map(convertOrder)
     },
     set orders(value: Order[]) {
       state.orders.set(value)
     },
 
     get currentOrder() {
-      return state.currentOrder.value
+      const order = state.currentOrder.get()
+      return order ? convertOrder(order) : null
     },
     set currentOrder(value: Order | null) {
       state.currentOrder.set(value)
     },
 
     get isLoading() {
-      return state.isLoading.value
+      return state.isLoading.get()
     },
     set isLoading(value: boolean) {
       state.isLoading.set(value)
     },
 
     get error() {
-      return state.error.value
+      return state.error.get()
     },
     set error(value: string | null) {
       state.error.set(value)
@@ -61,90 +80,43 @@ export const useOrdersState = () => {
     },
 
     // Actions
-    fetchOrders: async () => {
+    fetchOrders: async (params?: {
+      page?: number;
+      limit?: number;
+      status?: Order['status'];
+    }) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Mock orders data
-        const mockOrders: Order[] = Array.from({ length: 10 }, (_, i) => ({
-          id: `order-${i + 1}`,
-          userId: "user-1",
-          items: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, (_, j) => ({
-            productId: `product-${j + 1}`,
-            productName: `Product ${j + 1}`,
-            quantity: Math.floor(Math.random() * 3) + 1,
-            price: Math.floor(Math.random() * 100) + 10,
-            image: `/product${(j % 8) + 1}.jpg`,
-          })),
-          totalAmount: Math.floor(Math.random() * 500) + 50,
-          status: ["pending", "processing", "shipped", "delivered", "cancelled"][Math.floor(Math.random() * 5)] as any,
-          shippingAddress: "123 Main St, City, Country",
-          paymentMethod: "Credit Card",
-          createdAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
-          updatedAt: new Date().toISOString(),
-        }))
-
-        state.orders.set(mockOrders)
+        const { orders, total } = await getOrders(params)
+        state.orders.set(orders)
         state.isLoading.set(false)
 
-        return mockOrders
+        return { orders, total }
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
-        return []
+        return { orders: [], total: 0 }
       }
     },
 
-    fetchOrderById: async (orderId: string) => {
+    fetchOrderById: async (orderId: number) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Check if order exists in state
-        const existingOrder = state.orders.value.find((order) => order.id === orderId)
-
-        if (existingOrder) {
-          state.currentOrder.set(existingOrder)
-          state.isLoading.set(false)
-          return existingOrder
-        }
-
-        // Mock order data
-        const mockOrder: Order = {
-          id: orderId,
-          userId: "user-1",
-          items: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, (_, j) => ({
-            productId: `product-${j + 1}`,
-            productName: `Product ${j + 1}`,
-            quantity: Math.floor(Math.random() * 3) + 1,
-            price: Math.floor(Math.random() * 100) + 10,
-            image: `/product${(j % 8) + 1}.jpg`,
-          })),
-          totalAmount: Math.floor(Math.random() * 500) + 50,
-          status: "processing",
-          shippingAddress: "123 Main St, City, Country",
-          paymentMethod: "Credit Card",
-          createdAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
-
-        state.currentOrder.set(mockOrder)
+        const order = await getOrderById(orderId)
+        state.currentOrder.set(order)
         state.isLoading.set(false)
 
-        return mockOrder
+        return order
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
@@ -152,38 +124,27 @@ export const useOrdersState = () => {
       }
     },
 
-    createOrder: async (items: any[], shippingAddress: string, paymentMethod: string) => {
+    createOrder: async (orderData: {
+      items: Array<{
+        productId: number;
+        variantId?: number;
+        quantity: number;
+      }>;
+      shippingAddress: ShippingAddress;
+      paymentMethod: string;
+    }) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Calculate total amount
-        const totalAmount = items.reduce((total, item) => total + item.price * item.quantity, 0)
-
-        // Create new order
-        const newOrder: Order = {
-          id: `order-${Date.now()}`,
-          userId: "user-1",
-          items,
-          totalAmount,
-          status: "pending",
-          shippingAddress,
-          paymentMethod,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
-
-        state.orders.set([...state.orders.value, newOrder])
-        state.currentOrder.set(newOrder)
+        const order = await createOrder(orderData)
+        state.orders.set([...state.orders.get(), order])
         state.isLoading.set(false)
 
-        return newOrder
+        return order
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
@@ -191,42 +152,23 @@ export const useOrdersState = () => {
       }
     },
 
-    updateOrderStatus: async (orderId: string, status: Order["status"]) => {
+    updateOrderStatus: async (orderId: number, status: Order["status"]) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        const orderIndex = state.orders.value.findIndex((order) => order.id === orderId)
-
-        if (orderIndex >= 0) {
-          const updatedOrders = [...state.orders.value]
-          updatedOrders[orderIndex] = {
-            ...updatedOrders[orderIndex],
-            status,
-            updatedAt: new Date().toISOString(),
-          }
-
-          state.orders.set(updatedOrders)
-
-          if (state.currentOrder.value?.id === orderId) {
-            state.currentOrder.set({
-              ...state.currentOrder.value,
-              status,
-              updatedAt: new Date().toISOString(),
-            })
-          }
-
-          state.isLoading.set(false)
-          return updatedOrders[orderIndex]
-        } else {
-          throw new Error("Order not found")
+        const order = await updateOrderStatus(orderId, status)
+        state.orders.set(state.orders.get().map(o => o.id === orderId ? order : o))
+        
+        if (state.currentOrder.get()?.id === orderId) {
+          state.currentOrder.set(order)
         }
+
+        state.isLoading.set(false)
+        return order
       } catch (error) {
         state.set({
-          ...state.value,
+          ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })

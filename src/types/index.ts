@@ -89,6 +89,7 @@ export interface CreateOrderRequest {
   items: {
     productId: number;
     quantity: number;
+    variant?: string;
   }[];
   shippingAddress: ShippingAddress;
   paymentMethod: string;
