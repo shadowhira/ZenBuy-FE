@@ -1,44 +1,65 @@
 import { NextResponse } from "next/server"
+import { z } from "zod"
+import { LoginRequest, AuthResponse } from "../../types"
+
+const loginSchema = z.object({
+  email: z.string().email("Email không hợp lệ"),
+  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+})
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { email, password } = body
+    const validatedData = loginSchema.parse(body)
 
-    // Mô phỏng xác thực
-    if (email === "user@example.com" && password === "password") {
-      return NextResponse.json(
-        {
-          user: {
-            id: "1",
-            name: "John Doe",
-            email: "user@example.com",
-            role: "customer",
-            avatar: "/user-avatar.jpg",
-          },
-          token: "mock-jwt-token-for-testing",
+    // TODO: Thay thế bằng logic xác thực thực tế
+    if (
+      validatedData.email === "customer@example.com" &&
+      validatedData.password === "password123"
+    ) {
+      const response: AuthResponse = {
+        user: {
+          id: "1",
+          name: "Customer User",
+          email: validatedData.email,
+          role: "customer",
         },
-        { status: 200 },
-      )
-    } else if (email === "seller@example.com" && password === "password") {
-      return NextResponse.json(
-        {
-          user: {
-            id: "2",
-            name: "Jane Smith",
-            email: "seller@example.com",
-            role: "seller",
-            avatar: "/shop-avatar.jpg",
-          },
-          token: "mock-jwt-token-for-seller",
-        },
-        { status: 200 },
-      )
-    } else {
-      return NextResponse.json({ message: "Invalid email or password" }, { status: 401 })
+        token: "mock-jwt-token",
+      }
+      return NextResponse.json(response)
     }
+
+    if (
+      validatedData.email === "seller@example.com" &&
+      validatedData.password === "password123"
+    ) {
+      const response: AuthResponse = {
+        user: {
+          id: "2",
+          name: "Seller User",
+          email: validatedData.email,
+          role: "seller",
+        },
+        token: "mock-jwt-token",
+      }
+      return NextResponse.json(response)
+    }
+
+    return NextResponse.json(
+      { error: "Email hoặc mật khẩu không chính xác" },
+      { status: 401 }
+    )
   } catch (error) {
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 }
+      )
+    }
+    return NextResponse.json(
+      { error: "Lỗi xác thực" },
+      { status: 500 }
+    )
   }
 }
 

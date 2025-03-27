@@ -1,16 +1,24 @@
 import { NextResponse } from "next/server"
 import { generateMockProducts } from "@lib/mock-data"
+import { ProductsResponse } from "../types"
+import { z } from "zod"
+
+const querySchema = z.object({
+  page: z.string().optional().transform(val => val ? parseInt(val) : 1),
+  limit: z.string().optional().transform(val => val ? parseInt(val) : 10),
+  category: z.string().optional(),
+  query: z.string().optional(),
+  minPrice: z.string().optional().transform(val => val ? Number.parseFloat(val) : undefined),
+  maxPrice: z.string().optional().transform(val => val ? Number.parseFloat(val) : undefined),
+  sort: z.enum(["price_asc", "price_desc", "name_asc", "name_desc"]).optional(),
+})
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const limit = Number.parseInt(searchParams.get("limit") || "20")
-    const category = searchParams.get("category")
-    const query = searchParams.get("query")
-    const minPrice = searchParams.get("minPrice") ? Number.parseFloat(searchParams.get("minPrice")!) : undefined
-    const maxPrice = searchParams.get("maxPrice") ? Number.parseFloat(searchParams.get("maxPrice")!) : undefined
-    const sort = searchParams.get("sort")
+    const validatedParams = querySchema.parse(Object.fromEntries(searchParams))
+
+    const { page, limit, category, query, minPrice, maxPrice, sort } = validatedParams
 
     // Tạo dữ liệu mẫu
     let products = generateMockProducts(40)
@@ -56,17 +64,24 @@ export async function GET(request: Request) {
     const endIndex = startIndex + limit
     const paginatedProducts = products.slice(startIndex, endIndex)
 
-    return NextResponse.json(
-      {
-        products: paginatedProducts,
-        total,
-        page,
-        limit,
-      },
-      { status: 200 },
-    )
+    const response: ProductsResponse = {
+      products: paginatedProducts,
+      total,
+      page,
+      limit,
+    }
+    return NextResponse.json(response)
   } catch (error) {
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 }
+      )
+    }
+    return NextResponse.json(
+      { error: "Lỗi lấy danh sách sản phẩm" },
+      { status: 500 }
+    )
   }
 }
 

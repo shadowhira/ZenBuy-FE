@@ -1,15 +1,13 @@
 import { InventoryItem } from '../types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.escuelajs.co/api/v1';
-
 export async function getInventory(): Promise<InventoryItem[]> {
-  const response = await fetch(`${API_BASE_URL}/inventory`);
+  const response = await fetch('/api/inventory');
   if (!response.ok) throw new Error('Failed to fetch inventory');
   return response.json();
 }
 
 export async function addInventoryItem(item: Omit<InventoryItem, "id" | "createdAt" | "updatedAt">): Promise<InventoryItem> {
-  const response = await fetch(`${API_BASE_URL}/inventory`, {
+  const response = await fetch('/api/inventory', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -21,7 +19,7 @@ export async function addInventoryItem(item: Omit<InventoryItem, "id" | "created
 }
 
 export async function updateInventoryItem(id: string, updates: Partial<Omit<InventoryItem, "id" | "createdAt" | "updatedAt">>): Promise<InventoryItem> {
-  const response = await fetch(`${API_BASE_URL}/inventory/${id}`, {
+  const response = await fetch(`/api/inventory/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -33,7 +31,7 @@ export async function updateInventoryItem(id: string, updates: Partial<Omit<Inve
 }
 
 export async function deleteInventoryItem(id: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/inventory/${id}`, {
+  const response = await fetch(`/api/inventory/${id}`, {
     method: 'DELETE',
   });
   if (!response.ok) throw new Error('Failed to delete inventory item');
