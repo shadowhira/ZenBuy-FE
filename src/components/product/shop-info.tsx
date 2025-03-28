@@ -3,37 +3,35 @@ import { Button } from "@components/ui/button";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import type { Shop } from "@/types";
 
 interface ShopInfoProps {
-  shop: {
-    shopName: string;
-    shopAvatar: string;
-  };
+  shop: Shop;
 }
 
 export default function ShopInfo({ shop }: ShopInfoProps) {
   const { t } = useTranslation("detail-product");
 
   const onGoShop = () => {
-    redirect("/shop/1");
+    redirect(`/shop/${shop.id}`);
   };
 
   return (
     <div className="mt-12 p-6 border rounded-lg">
       <div className="flex items-center">
         <Image
-          src={shop.shopAvatar || "/placeholder.svg"}
-          alt={shop.shopName}
+          src={shop.logo || "/placeholder.svg"}
+          alt={shop.name}
           width={64}
           height={64}
           className="rounded-full"
         />
         <div className="ml-4">
-          <h2 className="text-xl font-bold">{shop.shopName}</h2>
+          <h2 className="text-xl font-bold">{shop.name}</h2>
           <div className="flex items-center mt-1">
             <Star className="h-4 w-4 text-yellow-400" />
             <span className="ml-1 text-sm">
-              4.8 (1.2k {t("ratings")})
+              {shop.rating.toFixed(1)} ({shop.reviews} {t("ratings")})
             </span>
           </div>
         </div>
@@ -49,15 +47,15 @@ export default function ShopInfo({ shop }: ShopInfoProps) {
       <div className="grid grid-cols-3 gap-4 mt-6">
         <div>
           <p className="text-sm text-gray-500">{t("products")}</p>
-          <p className="text-lg font-semibold">1.2k</p>
+          <p className="font-semibold">1.2k</p>
         </div>
         <div>
           <p className="text-sm text-gray-500">{t("followers")}</p>
-          <p className="text-lg font-semibold">10k</p>
+          <p className="font-semibold">2.5k</p>
         </div>
         <div>
           <p className="text-sm text-gray-500">{t("responseRate")}</p>
-          <p className="text-lg font-semibold">98%</p>
+          <p className="font-semibold">98%</p>
         </div>
       </div>
     </div>

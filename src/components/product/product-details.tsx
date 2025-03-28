@@ -7,24 +7,26 @@ import { Star, Truck, ShoppingCart } from "lucide-react";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { useTranslation } from "react-i18next";
+import type { Product } from "@/types";
 
 interface ProductDetailsProps {
-  product: {
-    title: string;
-    price: number;
-    rating: number;
-    reviews: number;
-    images: string[];
-  };
+  product: Product;
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
   const { t } = useTranslation("detail-product");
-  const [mainImage, setMainImage] = useState(product.images[0]);
+  const [mainImage, setMainImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
 
   // Thêm ref cho ảnh chính
   const tiltRef = useRef<HTMLDivElement & { vanillaTilt?: VanillaTilt }>(null);
+
+  // Cập nhật mainImage khi product thay đổi
+  useEffect(() => {
+    if (product.images && product.images.length > 0) {
+      setMainImage(product.images[0]);
+    }
+  }, [product.images]);
 
   // Khởi tạo hiệu ứng tilt khi component mount
   useEffect(() => {
@@ -49,68 +51,77 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     <div className="grid md:grid-cols-2 gap-8 mt-8">
       <div>
         {/* Áp dụng hiệu ứng tilt cho ảnh chính */}
-        <div ref={tiltRef} className="tilt-container">
-          <Image
-            src={mainImage || "/placeholder.svg"}
-            alt={product.title}
-            width={500}
-            height={500}
-            className="w-full rounded-lg"
-          />
-        </div>
-        <div className="flex mt-4 space-x-2 overflow-x-auto">
-          {product.images.map((img, index) => (
+        <div ref={tiltRef} className="relative aspect-square">
+          {mainImage ? (
             <Image
-              key={index}
-              src={img || "/placeholder.svg"}
-              alt={`${product.title} ${index + 1}`}
-              width={100}
-              height={100}
-              className="rounded-md cursor-pointer"
-              onClick={() => setMainImage(img)}
+              src={mainImage}
+              alt={`${product.title} - ${product.description}`}
+              fill
+              className="object-cover rounded-lg"
+              priority
             />
-          ))}
+          ) : (
+            <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+              <span className="text-gray-400">No image</span>
+            </div>
+          )}
         </div>
+        {product.images && product.images.length > 0 && (
+          <div className="grid grid-cols-4 gap-2 mt-4">
+            {product.images.map((image, index) => (
+              <button
+                key={index}
+                onClick={() => setMainImage(image)}
+                className={`relative aspect-square rounded-lg overflow-hidden ${
+                  mainImage === image ? "ring-2 ring-blue-500" : ""
+                }`}
+              >
+                <Image
+                  src={image}
+                  alt={`${product.title} - ${index + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div>
         <h1 className="text-3xl font-bold">{product.title}</h1>
         <div className="flex items-center mt-2">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              className={`h-5 w-5 ${
-                index < Math.floor(product.rating) ? "text-yellow-400" : "text-gray-300"
-              }`}
-              fill="currentColor"
-            />
-          ))}
-          <span className="ml-2 text-sm text-gray-500">
+          <div className="flex">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Star
+                key={index}
+                className={`h-5 w-5 ${
+                  index < product.rating ? "text-yellow-400" : "text-gray-300"
+                }`}
+                fill="currentColor"
+              />
+            ))}
+          </div>
+          <span className="ml-2 text-gray-600">
             ({product.reviews} {t("reviews")})
           </span>
         </div>
-        <p className="text-2xl font-bold mt-4">${product.price.toFixed(2)}</p>
+        <p className="text-2xl font-bold mt-4">${product.price}</p>
         <div className="flex items-center mt-4">
-          <Truck className="h-5 w-5 mr-2" />
-          <span>{t("freeShipping")}</span>
-        </div>
-        <div className="mt-6">
-          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-            {t("quantity")}
-          </label>
           <Input
             type="number"
-            id="quantity"
+            min="1"
+            max={product.stock}
             value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            min={1}
-            className="mt-1 w-20"
+            onChange={(e) => setQuantity(parseInt(e.target.value))}
+            className="w-20"
           />
-        </div>
-        <div className="mt-6 space-x-4 flex">
-          <Button size="lg">{t("buyNow")}</Button>
-          <Button size="lg" variant="outline">
+          <Button className="ml-4">
             <ShoppingCart className="mr-2 h-4 w-4" /> {t("addToCart")}
           </Button>
+        </div>
+        <div className="flex items-center mt-4 text-gray-600">
+          <Truck className="h-5 w-5 mr-2" />
+          <span>{t("freeShipping")}</span>
         </div>
       </div>
     </div>

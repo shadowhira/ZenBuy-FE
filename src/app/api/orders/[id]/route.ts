@@ -3,7 +3,7 @@ import { z } from "zod"
 import { getAuthUser } from "@lib/auth-utils"
 import { getOrders, saveOrder } from "@lib/order-utils"
 import { Order } from "../../types"
-import { handleError } from "../../error"
+import { handleError } from "@/lib/error"
 import { logger } from "@lib/logger"
 
 const updateOrderSchema = z.object({

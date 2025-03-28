@@ -46,37 +46,37 @@ export const ErrorCodes = {
 export function handleError(error: unknown) {
   logger.error("API Error:", error);
 
-  if (error instanceof z.ZodError) {
-    return NextResponse.json(
-      { error: error.errors[0].message },
-      { status: 400 }
-    );
-  }
-
   if (error instanceof ApiError) {
     return NextResponse.json(
       {
-        error: error.message,
-        code: error.code,
+        error: {
+          message: error.message,
+          code: error.code,
+        },
       },
       { status: error.statusCode }
     );
   }
 
-  if (error instanceof Error) {
+  if (error instanceof z.ZodError) {
     return NextResponse.json(
       {
-        error: error.message,
-        code: ErrorCodes.INTERNAL_SERVER_ERROR,
+        error: {
+          message: "Validation error",
+          code: ErrorCodes.VALIDATION_ERROR,
+          details: error.errors,
+        },
       },
-      { status: 500 }
+      { status: 400 }
     );
   }
 
   return NextResponse.json(
     {
-      error: "Lỗi không xác định",
-      code: ErrorCodes.INTERNAL_SERVER_ERROR,
+      error: {
+        message: "Internal server error",
+        code: ErrorCodes.INTERNAL_SERVER_ERROR,
+      },
     },
     { status: 500 }
   );

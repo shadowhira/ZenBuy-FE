@@ -57,8 +57,8 @@ export default function FeaturedProducts() {
               <Card key={product.id} className={cn("flex-grow flex flex-col cursor-pointer", styles.productCard)} onClick={() => onClick(product.id)}>
                 <CardHeader>
                   <Image
-                    src={product.images[0] || ""}
-                    alt={product.title}
+                    src={product.images[0] || "/placeholder.svg"}
+                    alt={`${product.title} - ${product.description}`}
                     className="w-full max-h-[150px] object-cover rounded-lg"
                     width={200}
                     height={200}

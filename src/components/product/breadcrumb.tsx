@@ -16,7 +16,7 @@ type Category = {
 
 export default function Breadcrumb({ category, subcategory, productName }: BreadcrumbProps) {
   const { t } = useTranslation("detail-product")
-  const { name: categoryName } = category
+  const categoryName = category?.name || t("uncategorized")
 
   return (
     <nav className="flex" aria-label="Breadcrumb">

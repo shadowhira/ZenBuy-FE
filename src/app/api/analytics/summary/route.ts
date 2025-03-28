@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuthUser } from "@lib/auth-utils";
 import { getOrders } from "@lib/order-utils";
-import { handleError } from "../../error";
+import { handleError } from "@/lib/error";
 import { logger } from "@lib/logger";
 
 export async function GET(request: Request) {

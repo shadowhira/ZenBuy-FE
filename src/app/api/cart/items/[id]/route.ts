@@ -3,7 +3,7 @@ import { z } from "zod"
 import { getAuthUser } from "@lib/auth-utils"
 import { getCart, saveCart } from "@lib/cart-utils"
 import { Cart } from "../../../types"
-import { handleError } from "../../../error"
+import { handleError } from "@/lib/error"
 import { logger } from "@lib/logger"
 
 const updateCartItemSchema = z.object({

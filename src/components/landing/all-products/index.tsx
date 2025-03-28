@@ -50,8 +50,8 @@ export default function AllProducts() {
             <Card key={product.id} className={cn("flex flex-col h-full cursor-pointer", styles.productCard)} onClick={() => onClick(product.id)}>
               <CardHeader className="p-0">
                 <Image
-                  src={product.images[0] || ""}
-                  alt={product.title}
+                  src={product.images[0] || "/placeholder.svg"}
+                  alt={`${product.title} - ${product.description}`}
                   className="w-full h-full object-cover rounded-t-lg"
                   layout="responsive"
                   width={300}

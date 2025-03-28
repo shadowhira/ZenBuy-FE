@@ -11,6 +11,7 @@ export interface Product {
   reviews: number;
   createdAt: string;
   updatedAt: string;
+  shop: Shop;
 }
 
 export interface ProductVariant {
@@ -79,6 +80,7 @@ export interface Shop {
   followers: number;
   createdAt: string;
   updatedAt: string;
+  reviews: number;
 }
 
 export interface Cart {
