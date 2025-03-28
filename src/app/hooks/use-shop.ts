@@ -1,9 +1,9 @@
 import { useMutation, useSuspenseQuery, useQuery, useQueryClient } from "@tanstack/react-query"
-import { shopService } from "@/services/shop.service"
-import { useShopState } from "@/store/seller/shop/shop.state"
+import { shopService } from "@services/shop.service"
+import { useShopState } from "@store/seller/shop/shop.state"
 import { queryClient } from "@services/query-client"
-import type { Shop, Product } from "src/types"
-import type { ShopDetails } from "@/store/seller/shop/shop.types"
+import type { Shop, Product } from "@/types"
+import type { ShopDetails } from "@store/seller/shop/shop.types"
 
 // Hook cho shop details với Hookstate
 export function useShopDetails() {

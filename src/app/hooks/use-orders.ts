@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
-import { ordersService } from "@/services/orders.service"
-import { useOrdersState } from "@/store"
-import { queryClient } from "@app/services/query-client"
+import { ordersService } from "@services/orders.service"
+import { useOrdersState } from "@store/orders/orders.state"
+import { queryClient } from "@services/query-client"
 
 export function useOrders(page = 1, limit = 10) {
   const ordersState = useOrdersState()

@@ -1,6 +1,7 @@
 import { useSuspenseQuery, useInfiniteQuery } from "@tanstack/react-query"
-import { productsService } from "@/services/products.service"
-import { useProductsState } from "@/store"
+import { productsService } from "@services/products.service"
+import { useProductsState } from "@store/products/products.state"
+import { queryClient } from "@services/query-client"
 
 export interface ProductSearchParams {
   query?: string

@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { analyticsService } from "@/services/analytics.service"
-import { useAnalyticsState } from "@/store"
+import { analyticsService } from "@services/analytics.service"
+import { useAnalyticsState } from "@store/seller/analytics/analytics.state"
 
 export function useAnalytics(timeFrame: "day" | "3days" | "week" | "month" = "week") {
   const analyticsState = useAnalyticsState()
