@@ -5,48 +5,39 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@component
 import { Button } from "@components/ui/button"
 import Image from "next/image"
 import { redirect } from "next/navigation"
-import { getProducts } from "src/apis"
+import { getProducts } from "@apis/products"
 import { useTranslation } from "react-i18next"
 import styles from "@styles/home.module.scss"
 import { cn } from "@lib/utils"
-
-type Category = {
-  id: number
-  name: string
-  image: string
-}
-
-type Product = {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: Category
-  images: string[]
-}
+import type { Product } from "../../../types"
 
 export default function AllProducts() {
   const { t } = useTranslation("landing");
   const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const productsPerPage = 12
+
   useEffect(() => {
     const fetchProducts = async () => {
-      const products = await getProducts();
-      setAllProducts(products);
+      try {
+        const response = await getProducts({
+          page: currentPage,
+          limit: productsPerPage
+        });
+        setAllProducts(response.products);
+        setTotalPages(Math.ceil(response.total / productsPerPage));
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
     };
   
     fetchProducts();
-  }, []);
-  const [currentPage, setCurrentPage] = useState(1)
-  const productsPerPage = 12
-  const totalPages = Math.ceil(allProducts.length / productsPerPage)
-
-  const indexOfLastProduct = currentPage * productsPerPage
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
-  const currentProducts = allProducts.slice(indexOfFirstProduct, indexOfLastProduct)
+  }, [currentPage]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
-   const onClick = (id: number) => {
+  const onClick = (id: number) => {
     redirect(`/product/${id}`)
   }
 
@@ -55,7 +46,7 @@ export default function AllProducts() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-6">{t('allProduct')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {currentProducts.map((product) => (
+          {allProducts.map((product) => (
             <Card key={product.id} className={cn("flex flex-col h-full cursor-pointer", styles.productCard)} onClick={() => onClick(product.id)}>
               <CardHeader className="p-0">
                 <Image

@@ -3,17 +3,12 @@
 import { useEffect, useState, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@components/ui/button"
-import { getCategories } from "../../../apis"
+import { categoriesService } from "@services/categories.service"
 import Image from "next/image"
 import { useTranslation } from "react-i18next"
 import styles from "@styles/home.module.scss"
 import { cn } from "@lib/utils"
-
-type Category = {
-  id: number
-  name: string
-  image: string
-}
+import type { Category } from "../../../types"
 
 export default function CategoryCarousel() {
   const { t } = useTranslation("landing")
@@ -23,8 +18,14 @@ export default function CategoryCarousel() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categories = await getCategories()
-      setCategories(categories)
+      try {
+        const categories = await categoriesService.getCategories()
+        // Chỉ lấy các danh mục cha (không có parentId)
+        const parentCategories = categories.filter(category => !category.parentId)
+        setCategories(parentCategories)
+      } catch (error) {
+        console.error('Failed to fetch categories:', error)
+      }
     }
 
     fetchCategories()

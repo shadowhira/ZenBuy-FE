@@ -9,22 +9,8 @@ import { redirect } from "next/navigation"
 import { useTranslation } from "react-i18next"
 import styles from "@styles/home.module.scss"
 import { cn } from "@lib/utils"
-import { getProducts } from "src/apis"
-
-type Category = {
-  id: number
-  name: string
-  image: string
-}
-
-type Product = {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: Category
-  images: string[]
-}
+import { getProducts } from "@apis/products"
+import type { Product } from "../../../types"
 
 export default function FeaturedProducts() {
   const { t } = useTranslation("landing");
@@ -34,9 +20,14 @@ export default function FeaturedProducts() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const products = await getProducts()
-      products.sort((a, b) => a.price - b.price)
-      setFeaturedProducts(products)
+      try {
+        const response = await getProducts()
+        // Lọc các sản phẩm có rating cao nhất
+        const sortedProducts = [...response.products].sort((a, b) => b.rating - a.rating)
+        setFeaturedProducts(sortedProducts)
+      } catch (error) {
+        console.error('Failed to fetch featured products:', error)
+      }
     }
 
     fetchProducts()
@@ -51,11 +42,7 @@ export default function FeaturedProducts() {
   }
 
   const prevPage = () => {
-    setPage(
-      (prevPage) =>
-        (prevPage - 1 + Math.ceil(featuredProducts.length / productsPerPage)) %
-        Math.ceil(featuredProducts.length / productsPerPage),
-    )
+    setPage((prevPage) => (prevPage - 1 + Math.ceil(featuredProducts.length / productsPerPage)) % Math.ceil(featuredProducts.length / productsPerPage))
   }
 
   const displayedProducts = featuredProducts.slice(page * productsPerPage, (page + 1) * productsPerPage)
