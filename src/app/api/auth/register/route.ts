@@ -13,21 +13,24 @@ export async function POST(request: Request) {
     const body = await request.json()
     const validatedData = registerSchema.parse(body)
 
-    // Kiểm tra email đã tồn tại
-    if (validatedData.email === "customer@example.com") {
-      return NextResponse.json({ error: "Email đã được sử dụng" }, { status: 400 })
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(validatedData),
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      return NextResponse.json(
+        { error: error.message || "Lỗi đăng ký" },
+        { status: response.status }
+      )
     }
 
-    const response: AuthResponse = {
-      user: {
-        id: "3",
-        name: validatedData.name,
-        email: validatedData.email,
-        role: "customer",
-      },
-      token: "mock-jwt-token",
-    }
-    return NextResponse.json(response)
+    const data: AuthResponse = await response.json()
+    return NextResponse.json(data)
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

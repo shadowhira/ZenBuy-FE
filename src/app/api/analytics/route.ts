@@ -1,21 +1,59 @@
 import { NextResponse } from 'next/server'
-import type { DailySales, ProductSales } from '../types'
+import { z } from 'zod'
+import { headers } from 'next/headers'
+import type { DailySales, ProductSales } from '../../../types'
+
+const timeFrameSchema = z.enum(["day", "3days", "week", "month"]).default("week")
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const timeFrame = searchParams.get('timeFrame') as "day" | "3days" | "week" | "month" || "week"
+    const headersList = await headers()
+    const token = headersList.get('Authorization')?.replace('Bearer ', '')
 
-    // TODO: Implement real API call to backend
-    const mockData = {
-      dailySales: [] as DailySales[],
-      productSales: [] as ProductSales[]
+    if (!token) {
+      return NextResponse.json(
+        { error: "Không tìm thấy token xác thực" },
+        { status: 401 }
+      )
     }
 
-    return NextResponse.json(mockData)
+    const { searchParams } = new URL(request.url)
+    const timeFrame = searchParams.get('timeFrame') || "week"
+    
+    try {
+      const validatedTimeFrame = timeFrameSchema.parse(timeFrame)
+      
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/analytics?timeFrame=${validatedTimeFrame}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        return NextResponse.json(
+          { error: error.message || "Lỗi lấy dữ liệu phân tích" },
+          { status: response.status }
+        )
+      }
+
+      const data = await response.json()
+      return NextResponse.json(data)
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: "Tham số timeFrame không hợp lệ" },
+          { status: 400 }
+        )
+      }
+      throw error
+    }
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch analytics' },
+      { error: "Lỗi lấy dữ liệu phân tích" },
       { status: 500 }
     )
   }

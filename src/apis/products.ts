@@ -1,19 +1,15 @@
-import { Product, ProductVariant } from '../types';
+import { Product, ProductVariant, ProductsResponse, ProductQueryParams } from '../types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.escuelajs.co/api/v1';
 
-export async function getProducts(params?: {
-  page?: number;
-  limit?: number;
-  category?: number;
-  search?: string;
-  sort?: string;
-}): Promise<{ products: Product[]; total: number }> {
+export async function getProducts(params?: ProductQueryParams): Promise<ProductsResponse> {
   const queryParams = new URLSearchParams();
   if (params?.page) queryParams.append('page', params.page.toString());
   if (params?.limit) queryParams.append('limit', params.limit.toString());
-  if (params?.category) queryParams.append('category', params.category.toString());
-  if (params?.search) queryParams.append('search', params.search);
+  if (params?.category) queryParams.append('category', params.category);
+  if (params?.query) queryParams.append('query', params.query);
+  if (params?.minPrice) queryParams.append('minPrice', params.minPrice.toString());
+  if (params?.maxPrice) queryParams.append('maxPrice', params.maxPrice.toString());
   if (params?.sort) queryParams.append('sort', params.sort);
 
   const response = await fetch(`${API_BASE_URL}/products?${queryParams}`);

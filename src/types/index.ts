@@ -42,11 +42,11 @@ export interface Order {
 }
 
 export interface OrderItem {
-  id: number;
-  productId: number;
-  variantId?: number;
-  quantity: number;
+  productId: string;
+  name: string;
   price: number;
+  quantity: number;
+  image?: string;
 }
 
 export interface ShippingAddress {
@@ -60,12 +60,13 @@ export interface ShippingAddress {
 }
 
 export interface CartItem {
-  productId: number;
-  variantId?: number;
-  quantity: number;
+  id: string;
+  productId: string;
   name: string;
   price: number;
+  quantity: number;
   image?: string;
+  variant?: string;
 }
 
 export interface Shop {
@@ -80,19 +81,22 @@ export interface Shop {
   updatedAt: string;
 }
 
-export interface CartResponse {
+export interface Cart {
   items: CartItem[];
-  total: number;
 }
 
+export interface CartResponse {
+  items: CartItem[];
+  totalItems: number;
+  totalPrice: number;
+}
+
+export type PaymentMethod = "credit_card" | "bank_transfer" | "cash";
+
 export interface CreateOrderRequest {
-  items: {
-    productId: number;
-    quantity: number;
-    variant?: string;
-  }[];
+  items: OrderItem[];
   shippingAddress: ShippingAddress;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
 }
 
 export interface User {
@@ -101,6 +105,8 @@ export interface User {
   email: string;
   avatar?: string;
   role: "customer" | "seller" | "admin";
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface InventoryItem {
@@ -116,6 +122,33 @@ export interface InventoryItem {
   updatedAt: string;
 }
 
+export interface CreateInventoryItemRequest {
+  productName: string;
+  sku: string;
+  quantity: number;
+  unitPrice: number;
+  supplier: string;
+  notes?: string;
+  images: string[];
+}
+
+export interface UpdateInventoryItemRequest {
+  productName?: string;
+  sku?: string;
+  quantity?: number;
+  unitPrice?: number;
+  supplier?: string;
+  notes?: string;
+  images?: string[];
+}
+
+export interface InventoryResponse {
+  items: InventoryItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface DailySales {
   date: string;
   revenue: number;
@@ -127,4 +160,47 @@ export interface ProductSales {
   productName: string;
   quantity: number;
   revenue: number;
+}
+
+export interface ProductsResponse {
+  products: Product[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface ProductQueryParams {
+  page?: number;
+  limit?: number;
+  category?: string;
+  query?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sort?: "price_asc" | "price_desc" | "name_asc" | "name_desc";
+}
+
+export interface OrdersResponse {
+  orders: Order[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+// Auth Types
+export type UserRole = "customer" | "seller" | "admin";
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
 } 

@@ -12,43 +12,24 @@ export async function POST(request: Request) {
     const body = await request.json()
     const validatedData = loginSchema.parse(body)
 
-    // TODO: Thay thế bằng logic xác thực thực tế
-    if (
-      validatedData.email === "customer@example.com" &&
-      validatedData.password === "password123"
-    ) {
-      const response: AuthResponse = {
-        user: {
-          id: "1",
-          name: "Customer User",
-          email: validatedData.email,
-          role: "customer",
-        },
-        token: "mock-jwt-token",
-      }
-      return NextResponse.json(response)
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(validatedData),
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      return NextResponse.json(
+        { error: error.message || "Email hoặc mật khẩu không chính xác" },
+        { status: response.status }
+      )
     }
 
-    if (
-      validatedData.email === "seller@example.com" &&
-      validatedData.password === "password123"
-    ) {
-      const response: AuthResponse = {
-        user: {
-          id: "2",
-          name: "Seller User",
-          email: validatedData.email,
-          role: "seller",
-        },
-        token: "mock-jwt-token",
-      }
-      return NextResponse.json(response)
-    }
-
-    return NextResponse.json(
-      { error: "Email hoặc mật khẩu không chính xác" },
-      { status: 401 }
-    )
+    const data: AuthResponse = await response.json()
+    return NextResponse.json(data)
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

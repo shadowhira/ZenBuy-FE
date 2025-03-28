@@ -1,4 +1,4 @@
-import type { Product } from "src/types";
+import type { Product } from "../../../types";
 
 export interface ProductsState {
   products: Product[];
@@ -6,5 +6,10 @@ export interface ProductsState {
   currentProduct: Product | null;
   isLoading: boolean;
   error: string | null;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }
 

@@ -1,4 +1,4 @@
-import { CartItem, CartResponse } from '../types';
+import { CartItem, CartResponse, Cart } from '../types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.escuelajs.co/api/v1';
 
@@ -8,41 +8,51 @@ export async function getCart(): Promise<CartResponse> {
   return response.json();
 }
 
-export async function addToCart(item: CartItem): Promise<CartResponse> {
+export async function updateCart(items: CartItem[]): Promise<CartResponse> {
   const response = await fetch(`${API_BASE_URL}/cart`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(item),
-  });
-  if (!response.ok) throw new Error('Failed to add item to cart');
-  return response.json();
-}
-
-export async function updateCartItem(params: { itemId: string; data: { quantity: number } }): Promise<CartResponse> {
-  const response = await fetch(`${API_BASE_URL}/cart/${params.itemId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(params.data),
+    body: JSON.stringify({ items }),
   });
-  if (!response.ok) throw new Error('Failed to update cart item');
+  if (!response.ok) throw new Error('Failed to update cart');
   return response.json();
 }
 
-export async function removeFromCart(productId: number): Promise<CartResponse> {
-  const response = await fetch(`${API_BASE_URL}/cart/${productId}`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) throw new Error('Failed to remove item from cart');
-  return response.json();
+// Helper functions
+export async function addToCart(item: CartItem): Promise<CartResponse> {
+  const cart = await getCart();
+  const existingItem = cart.items.find(i => i.productId === item.productId);
+  
+  if (existingItem) {
+    const updatedItems = cart.items.map(i =>
+      i.productId === item.productId
+        ? { ...i, quantity: i.quantity + item.quantity }
+        : i
+    );
+    return updateCart(updatedItems);
+  }
+  
+  return updateCart([...cart.items, item]);
 }
 
-export async function clearCart(): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/cart`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) throw new Error('Failed to clear cart');
+export async function updateCartItem(itemId: string, quantity: number): Promise<CartResponse> {
+  const cart = await getCart();
+  const updatedItems = cart.items.map(item =>
+    item.id === itemId
+      ? { ...item, quantity }
+      : item
+  );
+  return updateCart(updatedItems);
+}
+
+export async function removeFromCart(itemId: string): Promise<CartResponse> {
+  const cart = await getCart();
+  const updatedItems = cart.items.filter(item => item.id !== itemId);
+  return updateCart(updatedItems);
+}
+
+export async function clearCart(): Promise<CartResponse> {
+  return updateCart([]);
 } 

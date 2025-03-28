@@ -1,7 +1,7 @@
 import { hookstate, useHookstate } from "@hookstate/core"
 import type { ProductsState } from "./products.types"
 import { getProducts, getProductById } from "../../../apis/products"
-import type { Product } from "../../../types"
+import type { Product, ProductQueryParams } from "../../../types"
 
 // Initial state
 const initialState: ProductsState = {
@@ -10,6 +10,11 @@ const initialState: ProductsState = {
   currentProduct: null,
   isLoading: false,
   error: null,
+  pagination: {
+    page: 1,
+    limit: 10,
+    total: 0
+  }
 }
 
 // Create the global state
@@ -67,30 +72,36 @@ export const useProductsState = () => {
       state.error.set(value)
     },
 
+    get pagination() {
+      return state.pagination.get()
+    },
+    set pagination(value: { page: number; limit: number; total: number }) {
+      state.pagination.set(value)
+    },
+
     // Actions
-    fetchProducts: async (params?: {
-      page?: number;
-      limit?: number;
-      category?: number;
-      search?: string;
-      sort?: string;
-    }) => {
+    fetchProducts: async (params?: ProductQueryParams) => {
       try {
         state.isLoading.set(true)
         state.error.set(null)
 
-        const { products, total } = await getProducts(params)
-        state.products.set(products)
+        const response = await getProducts(params)
+        state.products.set(response.products)
+        state.pagination.set({
+          page: response.page,
+          limit: response.limit,
+          total: response.total
+        })
         state.isLoading.set(false)
 
-        return { products, total }
+        return response
       } catch (error) {
         state.set({
           ...state.get(),
           error: error instanceof Error ? error.message : "An error occurred",
           isLoading: false,
         })
-        return { products: [], total: 0 }
+        return { products: [], total: 0, page: 1, limit: 10 }
       }
     },
 
