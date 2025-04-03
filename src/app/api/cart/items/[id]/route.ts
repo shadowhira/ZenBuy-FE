@@ -1,93 +1,151 @@
-import { NextResponse } from "next/server"
-import { z } from "zod"
-import { getAuthUser } from "@lib/auth-utils"
-import { getCart, saveCart } from "@lib/cart-utils"
-import { Cart } from "../../../types"
-import { handleError } from "@/lib/error"
-import { logger } from "@lib/logger"
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import dbConnect from '@/lib/mongodb';
+import Cart from '@/models/Cart';
+import Product from '@/models/Product';
+import { getAuthUser } from '@/lib/auth-utils';
 
 const updateCartItemSchema = z.object({
   quantity: z.number().int().positive(),
-})
+});
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const user = await getAuthUser(request)
+    await dbConnect();
+
+    const user = await getAuthUser(request);
 
     if (!user) {
       return NextResponse.json(
-        { error: "Không có quyền truy cập" },
+        { error: 'Không có quyền truy cập' },
         { status: 401 }
-      )
+      );
     }
 
-    const body = await request.json()
-    const validatedData = updateCartItemSchema.parse(body)
+    const body = await request.json();
+    const validatedData = updateCartItemSchema.parse(body);
 
-    // Lấy giỏ hàng
-    const cart = await getCart(user.id)
+    // Tìm giỏ hàng của người dùng
+    const cart = await Cart.findOne({ user: user._id });
 
-    // Tìm sản phẩm cần cập nhật
-    const itemIndex = cart.items.findIndex((item) => item.id === params.id)
+    if (!cart) {
+      return NextResponse.json(
+        { error: 'Giỏ hàng không tồn tại' },
+        { status: 404 }
+      );
+    }
+
+    // Tìm item trong giỏ hàng
+    const itemIndex = cart.items.findIndex(
+      (item: any) => item._id.toString() === params.id
+    );
 
     if (itemIndex === -1) {
       return NextResponse.json(
-        { error: "Không tìm thấy sản phẩm trong giỏ hàng" },
+        { error: 'Sản phẩm không tồn tại trong giỏ hàng' },
         { status: 404 }
-      )
+      );
     }
 
-    // Cập nhật số lượng sản phẩm
-    cart.items[itemIndex] = {
-      ...cart.items[itemIndex],
-      quantity: validatedData.quantity,
+    // Lấy thông tin sản phẩm để kiểm tra số lượng
+    const productId = cart.items[itemIndex].product;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return NextResponse.json(
+        { error: 'Sản phẩm không tồn tại' },
+        { status: 404 }
+      );
     }
 
-    await saveCart(user.id, cart)
+    // Kiểm tra số lượng sản phẩm còn đủ không
+    if (product.stock < validatedData.quantity) {
+      return NextResponse.json(
+        { error: `Sản phẩm chỉ còn ${product.stock} sản phẩm` },
+        { status: 400 }
+      );
+    }
 
-    logger.info(
-      `Cập nhật số lượng sản phẩm ${params.id} thành ${validatedData.quantity}`
-    )
+    // Cập nhật số lượng
+    cart.items[itemIndex].quantity = validatedData.quantity;
 
-    return NextResponse.json(cart)
+    // Lưu giỏ hàng
+    await cart.save();
+
+    return NextResponse.json({
+      message: 'Cập nhật giỏ hàng thành công',
+    });
   } catch (error) {
-    return handleError(error)
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 }
+      );
+    }
+
+    console.error('Error updating cart item:', error);
+    return NextResponse.json(
+      { error: 'Lỗi cập nhật giỏ hàng' },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const user = await getAuthUser(request)
+    await dbConnect();
+
+    const user = await getAuthUser(request);
 
     if (!user) {
       return NextResponse.json(
-        { error: "Không có quyền truy cập" },
+        { error: 'Không có quyền truy cập' },
         { status: 401 }
-      )
+      );
     }
 
-    // Lấy giỏ hàng
-    const cart = await getCart(user.id)
+    // Tìm giỏ hàng của người dùng
+    const cart = await Cart.findOne({ user: user._id });
 
-    // Tìm sản phẩm cần xóa
-    const itemIndex = cart.items.findIndex((item) => item.id === params.id)
+    if (!cart) {
+      return NextResponse.json(
+        { error: 'Giỏ hàng không tồn tại' },
+        { status: 404 }
+      );
+    }
+
+    // Tìm item trong giỏ hàng
+    const itemIndex = cart.items.findIndex(
+      (item: any) => item._id.toString() === params.id
+    );
 
     if (itemIndex === -1) {
       return NextResponse.json(
-        { error: "Không tìm thấy sản phẩm trong giỏ hàng" },
+        { error: 'Sản phẩm không tồn tại trong giỏ hàng' },
         { status: 404 }
-      )
+      );
     }
 
-    // Xóa sản phẩm
-    cart.items.splice(itemIndex, 1)
-    await saveCart(user.id, cart)
+    // Xóa item khỏi giỏ hàng
+    cart.items.splice(itemIndex, 1);
 
-    logger.info(`Xóa sản phẩm ${params.id} khỏi giỏ hàng`)
+    // Lưu giỏ hàng
+    await cart.save();
 
-    return NextResponse.json(cart)
+    return NextResponse.json({
+      message: 'Xóa sản phẩm khỏi giỏ hàng thành công',
+    });
   } catch (error) {
-    return handleError(error)
+    console.error('Error deleting cart item:', error);
+    return NextResponse.json(
+      { error: 'Lỗi xóa sản phẩm khỏi giỏ hàng' },
+      { status: 500 }
+    );
   }
 }
-
