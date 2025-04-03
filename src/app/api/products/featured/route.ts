@@ -1,17 +1,23 @@
-import { NextResponse } from "next/server"
-import { generateMockProducts } from "@lib/mock-data"
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/mongodb';
+import Product from '@/models/Product';
 
 export async function GET() {
   try {
-    // Tạo dữ liệu mẫu
-    const products = generateMockProducts(40)
+    await dbConnect();
 
-    // Lấy 8 sản phẩm đầu tiên làm sản phẩm nổi bật
-    const featuredProducts = products.slice(0, 8)
+    // Lấy các sản phẩm được đánh dấu là nổi bật
+    const featuredProducts = await Product.find({ featured: true })
+      .limit(8)
+      .populate('category', 'name slug')
+      .populate('shop', 'name');
 
-    return NextResponse.json(featuredProducts, { status: 200 })
+    return NextResponse.json(featuredProducts);
   } catch (error) {
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error('Error fetching featured products:', error);
+    return NextResponse.json(
+      { error: 'Lỗi lấy sản phẩm nổi bật' },
+      { status: 500 }
+    );
   }
 }
-

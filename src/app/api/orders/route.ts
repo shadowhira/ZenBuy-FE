@@ -1,134 +1,167 @@
-import { NextResponse } from "next/server"
-import { getAuthUser } from "@lib/auth-utils"
-import { getOrders, saveOrder } from "@lib/order-utils"
-import { saveCart } from "@lib/cart-utils"
-import { OrdersResponse, CreateOrderRequest, Order } from "../types"
-import { z } from "zod"
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import dbConnect from '@/lib/mongodb';
+import Order from '@/models/Order';
+import Cart from '@/models/Cart';
+import Product from '@/models/Product';
+import { getAuthUser } from '@/lib/auth-utils';
 
-const querySchema = z.object({
-  page: z.string().optional().transform(val => val ? parseInt(val) : 1),
-  limit: z.string().optional().transform(val => val ? parseInt(val) : 10),
-})
-
-const orderItemSchema = z.object({
-  productId: z.string(),
-  name: z.string(),
-  price: z.number().positive(),
-  quantity: z.number().int().positive(),
-  image: z.string().optional(),
-})
-
+// Schema cho địa chỉ giao hàng
 const shippingAddressSchema = z.object({
-  fullName: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
-  address: z.string().min(5, "Địa chỉ phải có ít nhất 5 ký tự"),
-  city: z.string().min(2, "Thành phố phải có ít nhất 2 ký tự"),
-  state: z.string().min(2, "Tỉnh/Thành phố phải có ít nhất 2 ký tự"),
-  country: z.string().min(2, "Quốc gia phải có ít nhất 2 ký tự"),
-  zipCode: z.string().min(5, "Mã bưu điện phải có ít nhất 5 ký tự"),
-  phone: z.string().min(10, "Số điện thoại phải có ít nhất 10 ký tự"),
-})
+  fullName: z.string().min(2, 'Tên người nhận phải có ít nhất 2 ký tự'),
+  address: z.string().min(5, 'Địa chỉ phải có ít nhất 5 ký tự'),
+  city: z.string().min(2, 'Tên thành phố phải có ít nhất 2 ký tự'),
+  state: z.string().min(2, 'Tên tỉnh/thành phố phải có ít nhất 2 ký tự'),
+  country: z.string().min(2, 'Tên quốc gia phải có ít nhất 2 ký tự'),
+  zipCode: z.string().min(2, 'Mã bưu điện phải có ít nhất 2 ký tự'),
+  phone: z.string().min(10, 'Số điện thoại phải có ít nhất 10 ký tự'),
+});
 
+// Schema cho tạo đơn hàng
 const createOrderSchema = z.object({
-  items: z.array(orderItemSchema).min(1, "Giỏ hàng không được trống"),
   shippingAddress: shippingAddressSchema,
-  paymentMethod: z.enum(["credit_card", "bank_transfer", "cash"]),
-})
+  paymentMethod: z.enum(['credit_card', 'bank_transfer', 'cash']),
+});
 
 export async function GET(request: Request) {
   try {
-    const user = await getAuthUser(request)
+    await dbConnect();
+
+    const user = await getAuthUser(request);
 
     if (!user) {
       return NextResponse.json(
-        { error: "Không có quyền truy cập" },
+        { error: 'Không có quyền truy cập' },
         { status: 401 }
-      )
+      );
     }
 
-    const { searchParams } = new URL(request.url)
-    const validatedParams = querySchema.parse(Object.fromEntries(searchParams))
+    // Lấy tham số từ URL
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const skip = (page - 1) * limit;
 
-    // Lấy danh sách đơn hàng
-    const orders = await getOrders(user.id)
+    // Lấy danh sách đơn hàng của người dùng
+    const total = await Order.countDocuments({ user: user._id });
+    const orders = await Order.find({ user: user._id })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('items.product', 'title images');
 
-    // Phân trang
-    const startIndex = (validatedParams.page - 1) * validatedParams.limit
-    const endIndex = startIndex + validatedParams.limit
-    const paginatedOrders = orders.slice(startIndex, endIndex)
-
-    const response: OrdersResponse = {
-      orders: paginatedOrders,
-      total: orders.length,
-      page: validatedParams.page,
-      limit: validatedParams.limit,
-    }
-    return NextResponse.json(response)
+    return NextResponse.json({
+      orders,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
-      )
-    }
+    console.error('Error fetching orders:', error);
     return NextResponse.json(
-      { error: "Lỗi lấy danh sách đơn hàng" },
+      { error: 'Lỗi lấy danh sách đơn hàng' },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const user = await getAuthUser(request)
+    await dbConnect();
+
+    const user = await getAuthUser(request);
 
     if (!user) {
       return NextResponse.json(
-        { error: "Không có quyền truy cập" },
+        { error: 'Không có quyền truy cập' },
         { status: 401 }
-      )
+      );
     }
 
-    const body = await request.json()
-    const validatedData = createOrderSchema.parse(body)
+    const body = await request.json();
+    const validatedData = createOrderSchema.parse(body);
 
-    // Tính tổng tiền
-    const totalAmount = validatedData.items.reduce((total: number, item: any) => total + item.price * item.quantity, 0)
+    // Lấy giỏ hàng của người dùng
+    const cart = await Cart.findOne({ user: user._id }).populate('items.product');
+
+    if (!cart || cart.items.length === 0) {
+      return NextResponse.json(
+        { error: 'Giỏ hàng trống' },
+        { status: 400 }
+      );
+    }
+
+    // Kiểm tra số lượng sản phẩm còn đủ không
+    const orderItems = [];
+    let totalAmount = 0;
+
+    for (const item of cart.items) {
+      const product = await Product.findById(item.product as any);
+
+      if (!product) {
+        return NextResponse.json(
+          { error: `Sản phẩm không tồn tại` },
+          { status: 400 }
+        );
+      }
+
+      if (product.stock < item.quantity) {
+        return NextResponse.json(
+          { error: `Sản phẩm ${product.title} chỉ còn ${product.stock} sản phẩm` },
+          { status: 400 }
+        );
+      }
+
+      // Cập nhật số lượng sản phẩm
+      product.stock -= item.quantity;
+      await product.save();
+
+      // Thêm vào danh sách sản phẩm đơn hàng
+      orderItems.push({
+        product: item.product,
+        quantity: item.quantity,
+        price: item.price,
+        variant: item.variant,
+      });
+
+      // Tính tổng tiền
+      totalAmount += item.price * item.quantity;
+    }
 
     // Tạo đơn hàng mới
-    const newOrder: Order = {
-      id: `order-${Date.now()}`,
-      userId: user.id,
-      items: validatedData.items,
+    const order = await Order.create({
+      user: user._id,
+      items: orderItems,
       totalAmount,
-      status: "pending",
       shippingAddress: validatedData.shippingAddress,
       paymentMethod: validatedData.paymentMethod,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-
-    // Lấy danh sách đơn hàng hiện tại
-    const orders = await getOrders(user.id)
-    // Thêm đơn hàng mới vào danh sách
-    orders.push(newOrder)
-    // Lưu danh sách đơn hàng
-    await saveOrder(user.id, orders)
+      status: 'pending',
+    });
 
     // Xóa giỏ hàng
-    await saveCart(user.id, { items: [] })
+    cart.items = [];
+    await cart.save();
 
-    return NextResponse.json(newOrder, { status: 201 })
+    return NextResponse.json(
+      {
+        message: 'Đặt hàng thành công',
+        order,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: error.errors[0].message },
         { status: 400 }
-      )
+      );
     }
+
+    console.error('Error creating order:', error);
     return NextResponse.json(
-      { error: "Lỗi tạo đơn hàng" },
+      { error: 'Lỗi tạo đơn hàng' },
       { status: 500 }
-    )
+    );
   }
 }
-

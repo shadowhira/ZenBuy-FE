@@ -1,46 +1,56 @@
-import { NextResponse } from "next/server"
-import { z } from "zod"
-import { getAuthUser } from "@lib/auth-utils"
-import { getOrders, saveOrder } from "@lib/order-utils"
-import { Order } from "../../types"
-import { handleError } from "@/lib/error"
-import { logger } from "@lib/logger"
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import dbConnect from '@/lib/mongodb';
+import Order from '@/models/Order';
+import { getAuthUser } from '@/lib/auth-utils';
 
 const updateOrderSchema = z.object({
-  status: z.enum(["pending", "processing", "shipped", "delivered", "cancelled"]),
-})
+  status: z.enum(['pending', 'processing', 'shipped', 'delivered', 'cancelled']),
+});
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getAuthUser(request)
+    await dbConnect();
+
+    const user = await getAuthUser(request);
 
     if (!user) {
       return NextResponse.json(
-        { error: "Không có quyền truy cập" },
+        { error: 'Không có quyền truy cập' },
         { status: 401 }
-      )
+      );
     }
 
-    // Lấy danh sách đơn hàng
-    const orders = await getOrders(user.id)
-
-    // Tìm đơn hàng cần lấy
-    const order = orders.find((order) => order.id === params.id)
+    // Lấy chi tiết đơn hàng
+    const order = await Order.findById(params.id)
+      .populate('items.product', 'title price images')
+      .populate('user', 'name email');
 
     if (!order) {
       return NextResponse.json(
-        { error: "Không tìm thấy đơn hàng" },
+        { error: 'Đơn hàng không tồn tại' },
         { status: 404 }
-      )
+      );
     }
 
-    logger.info(`Lấy chi tiết đơn hàng ${params.id}`)
-    return NextResponse.json(order)
+    // Kiểm tra quyền truy cập (chỉ người dùng tạo đơn hàng hoặc admin mới có thể xem)
+    if (order.user._id.toString() !== user._id.toString() && user.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Không có quyền truy cập đơn hàng này' },
+        { status: 403 }
+      );
+    }
+
+    return NextResponse.json(order);
   } catch (error) {
-    return handleError(error)
+    console.error('Error fetching order:', error);
+    return NextResponse.json(
+      { error: 'Lỗi lấy chi tiết đơn hàng' },
+      { status: 500 }
+    );
   }
 }
 
@@ -49,85 +59,58 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getAuthUser(request)
+    await dbConnect();
+
+    const user = await getAuthUser(request);
 
     if (!user) {
       return NextResponse.json(
-        { error: "Không có quyền truy cập" },
+        { error: 'Không có quyền truy cập' },
         { status: 401 }
-      )
+      );
     }
 
-    const body = await request.json()
-    const validatedData = updateOrderSchema.parse(body)
-
-    // Lấy danh sách đơn hàng
-    const orders = await getOrders(user.id)
-
-    // Tìm đơn hàng cần cập nhật
-    const orderIndex = orders.findIndex((order) => order.id === params.id)
-
-    if (orderIndex === -1) {
+    // Chỉ admin hoặc seller mới có thể cập nhật trạng thái đơn hàng
+    if (user.role !== 'admin' && user.role !== 'seller') {
       return NextResponse.json(
-        { error: "Không tìm thấy đơn hàng" },
+        { error: 'Không có quyền cập nhật đơn hàng' },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+    const validatedData = updateOrderSchema.parse(body);
+
+    // Tìm đơn hàng
+    const order = await Order.findById(params.id);
+
+    if (!order) {
+      return NextResponse.json(
+        { error: 'Đơn hàng không tồn tại' },
         { status: 404 }
-      )
+      );
     }
 
     // Cập nhật trạng thái đơn hàng
-    const updatedOrder: Order = {
-      ...orders[orderIndex],
-      status: validatedData.status,
-      updatedAt: new Date().toISOString(),
+    order.status = validatedData.status;
+    await order.save();
+
+    return NextResponse.json({
+      message: 'Cập nhật đơn hàng thành công',
+      order,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 }
+      );
     }
 
-    orders[orderIndex] = updatedOrder
-    await saveOrder(user.id, orders)
-
-    logger.info(`Cập nhật trạng thái đơn hàng ${params.id} thành ${validatedData.status}`)
-
-    return NextResponse.json(updatedOrder)
-  } catch (error) {
-    return handleError(error)
+    console.error('Error updating order:', error);
+    return NextResponse.json(
+      { error: 'Lỗi cập nhật đơn hàng' },
+      { status: 500 }
+    );
   }
 }
-
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const user = await getAuthUser(request)
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "Không có quyền truy cập" },
-        { status: 401 }
-      )
-    }
-
-    // Lấy danh sách đơn hàng
-    const orders = await getOrders(user.id)
-
-    // Tìm đơn hàng cần xóa
-    const orderIndex = orders.findIndex((order) => order.id === params.id)
-
-    if (orderIndex === -1) {
-      return NextResponse.json(
-        { error: "Không tìm thấy đơn hàng" },
-        { status: 404 }
-      )
-    }
-
-    // Xóa đơn hàng
-    orders.splice(orderIndex, 1)
-    await saveOrder(user.id, orders)
-
-    logger.info(`Xóa đơn hàng ${params.id}`)
-
-    return NextResponse.json({ message: "Xóa đơn hàng thành công" })
-  } catch (error) {
-    return handleError(error)
-  }
-}
-

@@ -1,48 +1,60 @@
-import { cookies } from "next/headers"
-import type { User } from "@store/auth/auth.types"
+import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
+import { verifyToken } from './jwt';
+import User from '@/models/User';
+import dbConnect from './mongodb';
+import type { IUser } from '@/models/User';
 
-// Mô phỏng xác thực từ token
-export async function getAuthUser(request: Request): Promise<User | null> {
+export async function getAuthUser(request: NextRequest | Request): Promise<IUser | null> {
   // Lấy token từ Authorization header
-  const authHeader = request.headers.get("Authorization")
-  let token = authHeader ? authHeader.replace("Bearer ", "") : null
+  const authHeader = request.headers.get('Authorization');
+  let token = authHeader ? authHeader.replace('Bearer ', '') : null;
 
   // Nếu không có token trong header, thử lấy từ cookie
   if (!token) {
-    const cookieStore = await cookies()
-    token = cookieStore.get("token")?.value ?? null
+    try {
+      const cookieStore = await cookies();
+      token = cookieStore.get('token')?.value ?? null;
+    } catch (error) {
+      // Xử lý trường hợp không thể truy cập cookies (ví dụ: trong API routes)
+      const cookieHeader = request.headers.get('cookie');
+      if (cookieHeader) {
+        const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+          const [key, value] = cookie.trim().split('=');
+          acc[key] = value;
+          return acc;
+        }, {} as Record<string, string>);
+
+        token = cookies['token'];
+      }
+    }
   }
 
   if (!token) {
-    return null
+    return null;
   }
 
-  // Mô phỏng xác thực token
-  if (token === "mock-jwt-token-for-testing") {
-    return {
-      id: "1",
-      name: "John Doe",
-      email: "user@example.com",
-      role: "customer",
-      avatar: "/user-avatar.jpg",
-    }
-  } else if (token === "mock-jwt-token-for-seller") {
-    return {
-      id: "2",
-      name: "Jane Smith",
-      email: "seller@example.com",
-      role: "seller",
-      avatar: "/shop-avatar.jpg",
-    }
-  } else if (token === "mock-jwt-token-for-new-user") {
-    return {
-      id: "3",
-      name: "New User",
-      email: "newuser@example.com",
-      role: "customer",
-    }
+  // Xác thực token
+  const decoded = verifyToken(token);
+  if (!decoded || !decoded.id) {
+    return null;
   }
 
-  return null
+  try {
+    // Kết nối database
+    await dbConnect();
+
+    // Tìm user theo id từ token
+    const user = await User.findById(decoded.id).select('-password');
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error getting auth user:', error);
+    return null;
+  }
 }
 
