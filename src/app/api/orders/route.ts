@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import dbConnect from '@/lib/mongodb';
-import Order from '@/models/Order';
-import Cart from '@/models/Cart';
-import Product from '@/models/Product';
+import { ensureModelsRegistered, Order, Cart, Product } from '@/lib/models';
 import { getAuthUser } from '@/lib/auth-utils';
 
 // Schema cho địa chỉ giao hàng
@@ -27,14 +25,21 @@ export async function GET(request: Request) {
   try {
     await dbConnect();
 
+    // Đảm bảo tất cả các models được đăng ký
+    ensureModelsRegistered();
+
+    console.log('GET /api/orders - Authenticating user');
     const user = await getAuthUser(request);
 
     if (!user) {
+      console.log('GET /api/orders - Authentication failed');
       return NextResponse.json(
         { error: 'Không có quyền truy cập' },
         { status: 401 }
       );
     }
+
+    console.log('GET /api/orders - User authenticated:', user._id);
 
     // Lấy tham số từ URL
     const { searchParams } = new URL(request.url);

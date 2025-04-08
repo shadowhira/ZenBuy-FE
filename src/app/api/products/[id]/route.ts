@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import dbConnect from '@/lib/mongodb';
-import Product from '@/models/Product';
+import { ensureModelsRegistered, Product } from '@/lib/models';
 import { getAuthUser } from '@/lib/auth-utils';
 
 export async function GET(
@@ -11,9 +11,24 @@ export async function GET(
   try {
     await dbConnect();
 
+    // Đảm bảo tất cả các models được đăng ký
+    ensureModelsRegistered();
+
+    console.log('Finding product with ID:', params.id);
+
+    // Kiểm tra xem ID có hợp lệ không
+    if (!params.id.match(/^[0-9a-fA-F]{24}$/)) {
+      return NextResponse.json(
+        { error: 'ID sản phẩm không hợp lệ' },
+        { status: 400 }
+      );
+    }
+
     const product = await Product.findById(params.id)
       .populate('category', 'name slug')
       .populate('shop', 'name logo followers rating');
+
+    console.log('Product found:', product ? 'Yes' : 'No');
 
     if (!product) {
       return NextResponse.json(

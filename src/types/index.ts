@@ -1,5 +1,6 @@
 export interface Product {
-  id: number;
+  id?: number;
+  _id?: string;  // Thêm cho tương thích với MongoDB
   title: string;
   price: number;
   description: string;
@@ -12,10 +13,12 @@ export interface Product {
   createdAt: string;
   updatedAt: string;
   shop: Shop;
+  slug?: string;  // Thêm cho tương thích với MongoDB
 }
 
 export interface ProductVariant {
-  id: number;
+  id?: number;
+  _id?: string;  // Thêm cho tương thích với MongoDB
   name: string;
   price: number;
   stock: number;
@@ -23,31 +26,40 @@ export interface ProductVariant {
 }
 
 export interface Category {
-  id: number;
+  id?: number;
+  _id?: string;  // Thêm cho tương thích với MongoDB
   name: string;
   image: string;
   parentId?: number;
+  parent?: string;  // Thêm cho tương thích với MongoDB
   children?: Category[];
+  slug?: string;  // Thêm cho tương thích với MongoDB
 }
 
 export interface Order {
-  id: number;
-  userId: number;
+  id?: number;
+  _id?: string;  // Thêm cho tương thích với MongoDB
+  userId?: number;
+  user?: string;  // Thêm cho tương thích với MongoDB
   items: OrderItem[];
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  total: number;
+  total?: number;
+  totalAmount?: number; // Thêm cho tương thích với API
   shippingAddress: ShippingAddress;
   paymentMethod: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface OrderItem {
-  productId: string;
+  _id?: string;  // Thêm cho tương thích với MongoDB
+  product?: string;  // Thêm cho tương thích với MongoDB (reference)
+  productId?: string;
   name: string;
   price: number;
   quantity: number;
   image?: string;
+  variant?: string;
 }
 
 export interface ShippingAddress {
@@ -61,8 +73,10 @@ export interface ShippingAddress {
 }
 
 export interface CartItem {
-  id: string;
-  productId: string;
+  id?: string;
+  _id?: string;  // Thêm cho tương thích với MongoDB
+  product?: string;  // Thêm cho tương thích với MongoDB (reference)
+  productId?: string;
   name: string;
   price: number;
   quantity: number;
@@ -71,20 +85,28 @@ export interface CartItem {
 }
 
 export interface Shop {
-  id: number;
+  id?: number;
+  _id?: string;  // Thêm cho tương thích với MongoDB
   name: string;
   description: string;
   logo: string;
-  products: Product[];
-  rating: number;
-  followers: number;
-  createdAt: string;
-  updatedAt: string;
-  reviews: number;
+  banner?: string;  // Thêm cho tương thích với MongoDB
+  products?: Product[];
+  rating?: number;
+  followers?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  reviews?: number;
+  slug?: string;  // Thêm cho tương thích với MongoDB
+  owner?: string;  // Thêm cho tương thích với MongoDB (reference to User)
 }
 
 export interface Cart {
+  _id?: string;  // Thêm cho tương thích với MongoDB
+  user?: string;  // Thêm cho tương thích với MongoDB (reference to User)
   items: CartItem[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CartResponse {
@@ -102,13 +124,15 @@ export interface CreateOrderRequest {
 }
 
 export interface User {
-  id: string;
+  id?: string;
+  _id?: string;  // Thêm cho tương thích với MongoDB
   name: string;
   email: string;
   avatar?: string;
   role: "customer" | "seller" | "admin";
   createdAt?: string;
   updatedAt?: string;
+  password?: string;  // Chỉ dùng cho API, không bao giờ gửi về client
 }
 
 export interface InventoryItem {
@@ -186,6 +210,7 @@ export interface OrdersResponse {
   total: number;
   page: number;
   limit: number;
+  totalPages?: number; // Thêm cho tương thích với API
 }
 
 // Auth Types
@@ -205,4 +230,23 @@ export interface RegisterRequest {
 export interface AuthResponse {
   user: User;
   token: string;
-} 
+}
+
+// Re-export from cart.ts
+export type { AddToCartRequest, UpdateCartItemRequest, CartState } from './cart';
+
+// Re-export from order.ts
+export type {
+  ShippingAddress,
+  PaymentMethod,
+  OrderItem,
+  Order,
+  OrdersResponse
+} from './order';
+
+// Re-export from product.ts
+export type {
+  ProductQueryParams,
+  ProductsResponse,
+  Product
+} from './product';

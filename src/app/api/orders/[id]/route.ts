@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import dbConnect from '@/lib/mongodb';
-import Order from '@/models/Order';
+import { ensureModelsRegistered, Order } from '@/lib/models';
 import { getAuthUser } from '@/lib/auth-utils';
 
 const updateOrderSchema = z.object({
@@ -14,6 +14,9 @@ export async function GET(
 ) {
   try {
     await dbConnect();
+
+    // Đảm bảo tất cả các models được đăng ký
+    ensureModelsRegistered();
 
     const user = await getAuthUser(request);
 
@@ -60,6 +63,9 @@ export async function PUT(
 ) {
   try {
     await dbConnect();
+
+    // Đảm bảo tất cả các models được đăng ký
+    ensureModelsRegistered();
 
     const user = await getAuthUser(request);
 

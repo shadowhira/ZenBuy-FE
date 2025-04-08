@@ -1,21 +1,5 @@
 import { fetchApi } from "./api"
-import type { CartItem } from "@/store/cart/cart.types"
-
-interface CartResponse {
-  items: CartItem[]
-  totalItems: number
-  totalPrice: number
-}
-
-interface AddToCartRequest {
-  productId: string
-  quantity: number
-  variant?: string
-}
-
-interface UpdateCartItemRequest {
-  quantity: number
-}
+import type { CartItem, CartResponse, AddToCartRequest, UpdateCartItemRequest } from "@/types"
 
 export const cartService = {
   getCart: () => fetchApi<CartResponse>("/cart"),

@@ -14,7 +14,7 @@ export default function EditProfileForm() {
     email: "goku@example.com",
     phone: "123-456-7890",
     address: "123 Main St, City, Country",
-    bio: "I love shopping on Zen Buy!",
+    bio: "I love shopping on Zenera!",
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

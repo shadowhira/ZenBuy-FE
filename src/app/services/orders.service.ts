@@ -1,25 +1,20 @@
 import { fetchApi } from "./api"
-import type { Order } from "@/store/orders/orders.types"
-
-interface OrdersResponse {
-  orders: Order[]
-  total: number
-  page: number
-  limit: number
-}
+import type { Order, OrdersResponse, ShippingAddress, PaymentMethod } from "@/types"
 
 interface CreateOrderRequest {
-  items: {
-    productId: string
-    quantity: number
-    variant?: string
-  }[]
-  shippingAddress: string
-  paymentMethod: string
+  shippingAddress: ShippingAddress;
+  paymentMethod: PaymentMethod;
 }
 
 export const ordersService = {
-  getOrders: (page = 1, limit = 10) => fetchApi<OrdersResponse>(`/orders?page=${page}&limit=${limit}`),
+  getOrders: (params?: { page?: number; limit?: number }) => {
+    const queryParams = new URLSearchParams();
+
+    if (params?.page) queryParams.append("page", params.page.toString());
+    if (params?.limit) queryParams.append("limit", params.limit.toString());
+
+    return fetchApi<OrdersResponse>(`/orders?${queryParams.toString()}`);
+  },
 
   getOrderById: (id: string) => fetchApi<Order>(`/orders/${id}`),
 
@@ -29,10 +24,15 @@ export const ordersService = {
       body: JSON.stringify(data),
     }),
 
-  updateOrderStatus: (id: string, status: Order["status"]) =>
-    fetchApi<Order>(`/orders/${id}/status`, {
+  updateOrderStatus: (id: string, status: Order['status']) =>
+    fetchApi<Order>(`/orders/${id}`, {
       method: "PUT",
       body: JSON.stringify({ status }),
+    }),
+
+  cancelOrder: (id: string) =>
+    fetchApi<Order>(`/orders/${id}/cancel`, {
+      method: "POST",
     }),
 }
 

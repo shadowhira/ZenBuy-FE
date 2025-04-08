@@ -9,9 +9,11 @@ interface BreadcrumbProps {
 }
 
 type Category = {
-  id: number
+  id?: number
+  _id?: string
   name: string
-  image: string
+  image?: string
+  slug?: string
 }
 
 export default function Breadcrumb({ category, subcategory, productName }: BreadcrumbProps) {

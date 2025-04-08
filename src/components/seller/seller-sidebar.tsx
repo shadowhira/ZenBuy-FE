@@ -12,7 +12,7 @@ import {
 } from "@components/ui/sidebar"
 import { redirect } from "next/navigation"
 import Image from "next/image"
-import logo from "@images/zenBuy.webp"
+import logo from "@images/Zenera.webp"
 
 const menuItems = [
   { icon: Home, label: "Dashboard", href: "/seller/dashboard" },
@@ -53,7 +53,7 @@ export default function SellerSidebar() {
         </SidebarMenu>
       </SidebarContent>
       <div className="flex-shrink-0 cursor-pointer flex justify-center mb-2" onClick={() => onGoHome()}>
-        <Image src={logo} alt="Zen Buy Logo" width={60} height={60} className="border-4 border-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full" />
+        <Image src={logo} alt="Zenera Logo" width={60} height={60} className="border-4 border-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full" />
       </div>
     </Sidebar>
   )

@@ -13,7 +13,7 @@ import { SuspenseWrapper } from "@components/providers/suspense-wrapper"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Zen Buy",
+  title: "Zenera",
   description: "Your one-stop shop for all things trendy and essential",
   generator: 'v0.dev',
   icons: "/favicon.png",
@@ -29,7 +29,7 @@ interface RootLayoutProps {
   };
 }
 
-const i18nNamespaces = ['landing', 'navbar-general', 'footer-general', "searchPage", "detail-product", "shopPage"];
+const i18nNamespaces = ['landing', 'navbar-general', 'footer-general', "searchPage", "detail-product", "shopPage", "cart", "orders", "checkout"];
 
 export default async function RootLayout({
   children,

@@ -1,25 +1,8 @@
 import { fetchApi } from "./api"
-import type { Product } from "@/store/products/products.types"
-
-interface ProductsResponse {
-  products: Product[]
-  total: number
-  page: number
-  limit: number
-}
-
-interface ProductSearchParams {
-  query?: string
-  category?: string
-  minPrice?: number
-  maxPrice?: number
-  page?: number
-  limit?: number
-  sort?: string
-}
+import type { Product, ProductsResponse, ProductQueryParams } from "@/types"
 
 export const productsService = {
-  getProducts: (params: ProductSearchParams = {}) => {
+  getProducts: (params: ProductQueryParams = {}) => {
     const queryParams = new URLSearchParams()
 
     // Add all params to query string
@@ -36,6 +19,23 @@ export const productsService = {
 
   getFeaturedProducts: () => fetchApi<Product[]>("/products/featured"),
 
-  searchProducts: (query: string) => fetchApi<ProductsResponse>(`/products/search?query=${encodeURIComponent(query)}`),
+  searchProducts: (query: string) => fetchApi<ProductsResponse>(`/products?query=${encodeURIComponent(query)}`),
+
+  createProduct: (product: Partial<Product>) =>
+    fetchApi<Product>("/products", {
+      method: "POST",
+      body: JSON.stringify(product),
+    }),
+
+  updateProduct: (id: string, product: Partial<Product>) =>
+    fetchApi<Product>(`/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(product),
+    }),
+
+  deleteProduct: (id: string) =>
+    fetchApi<{ success: boolean }>(`/products/${id}`, {
+      method: "DELETE",
+    }),
 }
 

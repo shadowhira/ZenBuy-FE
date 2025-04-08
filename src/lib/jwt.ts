@@ -8,8 +8,12 @@ export function signToken(payload: any): string {
 
 export function verifyToken(token: string): any {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    console.log('verifyToken - Verifying token');
+    const decoded = jwt.verify(token, JWT_SECRET);
+    console.log('verifyToken - Token verified:', decoded);
+    return decoded;
   } catch (error) {
+    console.error('verifyToken - Error verifying token:', error);
     return null;
   }
 }

@@ -3,10 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import VanillaTilt from "vanilla-tilt"; // Import vanilla-tilt
-import { Star, Truck, ShoppingCart } from "lucide-react";
+import { Star, Truck, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { useAddToCart } from "@hooks/use-cart";
 import type { Product } from "@/types";
 
 interface ProductDetailsProps {
@@ -17,6 +19,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const { t } = useTranslation("detail-product");
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+  const addToCart = useAddToCart();
 
   // Thêm ref cho ảnh chính
   const tiltRef = useRef<HTMLDivElement & { vanillaTilt?: VanillaTilt }>(null);
@@ -112,13 +117,59 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             min="1"
             max={product.stock}
             value={quantity}
-            onChange={(e) => setQuantity(parseInt(e.target.value))}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              if (value > 0 && value <= product.stock) {
+                setQuantity(value);
+              }
+            }}
             className="w-20"
+            disabled={product.stock <= 0 || isLoading}
           />
-          <Button className="ml-4">
-            <ShoppingCart className="mr-2 h-4 w-4" /> {t("addToCart")}
+          <Button
+            className="ml-4"
+            onClick={() => {
+              if (product.stock <= 0) return;
+
+              setIsLoading(true);
+              addToCart.mutate(
+                {
+                  productId: product._id,
+                  quantity: quantity,
+                },
+                {
+                  onSuccess: () => {
+                    setIsLoading(false);
+                    setIsAdded(true);
+                    toast.success(t("addedToCart"));
+
+                    // Reset isAdded after 2 seconds
+                    setTimeout(() => setIsAdded(false), 2000);
+                  },
+                  onError: (error) => {
+                    setIsLoading(false);
+                    toast.error(error instanceof Error ? error.message : t("errorAddingToCart"));
+                  },
+                }
+              );
+            }}
+            disabled={product.stock <= 0 || isLoading}
+            variant={isAdded ? "success" : "default"}
+          >
+            {isAdded ? (
+              <>
+                <Check className="mr-2 h-4 w-4" /> {t("added")}
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="mr-2 h-4 w-4" /> {t("addToCart")}
+              </>
+            )}
           </Button>
         </div>
+        {product.stock <= 0 && (
+          <p className="text-destructive mt-2">{t("outOfStock")}</p>
+        )}
         <div className="flex items-center mt-4 text-gray-600">
           <Truck className="h-5 w-5 mr-2" />
           <span>{t("freeShipping")}</span>

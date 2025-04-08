@@ -1,22 +1,28 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import dbConnect from '@/lib/mongodb';
-import Cart from '@/models/Cart';
-import Product from '@/models/Product';
+import { ensureModelsRegistered, Cart, Product } from '@/lib/models';
 import { getAuthUser } from '@/lib/auth-utils';
 
 export async function GET(request: Request) {
   try {
     await dbConnect();
 
+    // Đảm bảo tất cả các models được đăng ký
+    ensureModelsRegistered();
+
+    console.log('GET /api/cart - Authenticating user');
     const user = await getAuthUser(request);
 
     if (!user) {
+      console.log('GET /api/cart - Authentication failed');
       return NextResponse.json(
         { error: 'Không có quyền truy cập' },
         { status: 401 }
       );
     }
+
+    console.log('GET /api/cart - User authenticated:', user._id);
 
     // Tìm giỏ hàng của người dùng
     let cart = await Cart.findOne({ user: user._id }).populate({
@@ -79,6 +85,9 @@ const updateCartSchema = z.object({
 export async function PUT(request: Request) {
   try {
     await dbConnect();
+
+    // Đảm bảo tất cả các models được đăng ký
+    ensureModelsRegistered();
 
     const user = await getAuthUser(request);
 

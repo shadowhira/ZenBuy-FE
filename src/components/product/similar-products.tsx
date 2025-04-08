@@ -2,26 +2,41 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@components/ui/button"
-import ProductCard from "@components/search/product-card"
-import { getProducts } from "src/apis"
+import ProductCard from "@components/product/product-card"
+import { productsService } from "@services/products.service"
 import { useTranslation } from "react-i18next"
-import type { Product } from "@/types"
+// Product type definition for legacy API
+interface LegacyProduct {
+  id: number;
+  name?: string;
+  title?: string;
+  price: number;
+  description?: string;
+  category?: any;
+  images?: string[];
+  rating?: number;
+  stock?: number;
+  slug?: string;
+  _id?: string;
+}
 
 interface SimilarProductsProps {
   category: Category
 }
 
 type Category = {
-  id: number
+  _id?: string
+  id?: number
   name: string
-  image: string
+  image?: string
+  slug?: string
 }
 
 export default function SimilarProducts({ category }: SimilarProductsProps) {
   const { t } = useTranslation("detail-product")
   const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 8
-  const [similarProducts, setSimilarProducts] = useState<Product[]>([])
+  const [similarProducts, setSimilarProducts] = useState<LegacyProduct[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -30,13 +45,14 @@ export default function SimilarProducts({ category }: SimilarProductsProps) {
     const fetchProducts = async () => {
       try {
         setIsLoading(true)
-        const response = await getProducts()
+        const response = await productsService.getProducts({ category: category._id })
         if (response && response.products && isMounted) {
+          // Convert Product[] to LegacyProduct[] to fix type error
           const sortedProducts = [...response.products].sort((a, b) => a.price - b.price)
-          setSimilarProducts(sortedProducts)
+          setSimilarProducts(sortedProducts as unknown as LegacyProduct[])
         }
       } catch (error) {
-        console.error('Failed to fetch similar products:', error)
+        // console.error('Failed to fetch similar products:', error)
       } finally {
         if (isMounted) {
           setIsLoading(false)
@@ -49,7 +65,7 @@ export default function SimilarProducts({ category }: SimilarProductsProps) {
     return () => {
       isMounted = false
     }
-  }, [category.id])
+  }, [category._id])
 
   const indexOfLastProduct = currentPage * productsPerPage
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage
@@ -80,7 +96,24 @@ export default function SimilarProducts({ category }: SimilarProductsProps) {
       <h2 className="text-2xl font-bold mb-4">{t("similarProducts")}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product._id || String(product.id)}
+            product={{
+              _id: product._id || String(product.id),
+              title: product.title || product.name || 'Product',
+              price: product.price,
+              description: product.description || '',
+              category: product.category ? {
+                _id: product.category._id || product.category.id || '',
+                name: product.category.name || '',
+                slug: product.category.slug || ''
+              } : undefined,
+              images: product.images || [],
+              rating: product.rating,
+              stock: product.stock || 10,
+              slug: product.slug || ''
+            }}
+          />
         ))}
       </div>
       {totalPages > 1 && (

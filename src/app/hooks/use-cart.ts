@@ -8,8 +8,12 @@ export function useCart() {
 
   const query = useSuspenseQuery({
     queryKey: ["cart"],
-    queryFn: cartService.getCart,
+    queryFn: () => {
+      // console.log('useCart - Fetching cart');
+      return cartService.getCart();
+    },
     select: (data) => {
+      // console.log('useCart - Cart data received:', data);
       // Cập nhật state trong Hookstate
       cartState.items = data.items
       return data
@@ -21,10 +25,17 @@ export function useCart() {
 
 export function useAddToCart() {
   return useMutation({
-    mutationFn: cartService.addToCart,
+    mutationFn: (data) => {
+      // console.log('useAddToCart - Adding item to cart:', data);
+      return cartService.addToCart(data);
+    },
     onSuccess: () => {
+      // console.log('useAddToCart - Item added successfully');
       // Invalidate cart query để fetch lại
       queryClient.invalidateQueries({ queryKey: ["cart"] })
+    },
+    onError: (error) => {
+      // console.error('useAddToCart - Error adding item to cart:', error);
     },
   })
 }

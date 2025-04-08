@@ -7,7 +7,7 @@ import LanguageChanger from "../utils/languague-changer"
 import ThemeChanger from "../utils/theme-changer"
 import Link from "next/link"
 import { ShoppingCart, Search } from "lucide-react"
-import logo from "@images/zenBuy.webp"
+import logo from "@images/Zenera.webp"
 import { redirect } from "next/navigation"
 import { useTranslation } from "react-i18next"
 import styles from "@styles/navbar.module.scss"
@@ -18,9 +18,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@components/ui/button"
 
 type Category = {
-  id: number
+  _id: string
+  id?: number
   name: string
   image: string
+  slug: string
 }
 
 export default function Navbar() {
@@ -28,11 +30,20 @@ export default function Navbar() {
   const [openCategory, setOpenCategory] = useState<string | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
-  
+
   useEffect(() => {
     const fetchCategories = async () => {
-      const categories = await getCategories()
-      setCategories(categories)
+      const categoriesData = await getCategories()
+      console.log('categories: ', categoriesData);
+      // Chuyển đổi dữ liệu để phù hợp với kiểu Category
+      const formattedCategories = categoriesData.map((cat: any) => ({
+        _id: cat._id || cat.id,
+        id: cat.id,
+        name: cat.name,
+        image: cat.image || '/placeholder.svg',
+        slug: cat.slug || ''
+      }))
+      setCategories(formattedCategories)
     }
 
     fetchCategories()
@@ -54,11 +65,11 @@ export default function Navbar() {
         </div>
         <div className={styles.mainNav}>
           <div className={cn('hover:scale-110 transition"',styles.logo)} onClick={() => onGoHome()}>
-            <Image src={logo} alt="Zen Buy Logo" width={60} height={60} />
+            <Image src={logo} alt="Zenera Logo" width={60} height={60} />
           </div>
-          <div 
+          <div
             className={styles.productsDropdown}
-            onMouseEnter={() => setOpenCategory('products')} 
+            onMouseEnter={() => setOpenCategory('products')}
             onMouseLeave={() => setOpenCategory(null)}
           >
             <button className={styles.dropdownButton}>
@@ -67,7 +78,7 @@ export default function Navbar() {
             </button>
             <div className={`${styles.dropdownContent} ${openCategory === 'products' ? styles.open : ''}`}>
               {categories.map((category) => (
-                <div key={category.id} className={styles.categoryItem}>
+                <div key={category._id} className={styles.categoryItem}>
                   <Image src={category.image} alt={category.name} width={8} height={8} />
                   <span>{category.name}</span>
                 </div>

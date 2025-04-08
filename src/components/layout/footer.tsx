@@ -50,7 +50,7 @@ export default function Footer() {
 
         <Separator className="my-8" />
         <div className="text-center">
-          <p className="text-sm text-muted-foreground">&copy; 2025 Zen Buy. {t("allRightsReserved")}</p>
+          <p className="text-sm text-muted-foreground">&copy; 2025 Zenera. {t("allRightsReserved")}</p>
         </div>
       </div>
     </footer>

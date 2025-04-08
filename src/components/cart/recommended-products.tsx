@@ -4,6 +4,7 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@components/ui/button"
 import ProductCard from "@components/search/product-card"
+import { useTranslation } from "react-i18next"
 
 const recommendedProducts = [
   { id: 1, name: "Recommended Product 1", price: 29.99, image: "/product1.jpg", rating: 4 },
@@ -15,6 +16,7 @@ const recommendedProducts = [
 ]
 
 export default function RecommendedProducts() {
+  const { t } = useTranslation("cart");
   const [startIndex, setStartIndex] = useState(0)
   const productsToShow = 4
 
@@ -32,7 +34,7 @@ export default function RecommendedProducts() {
 
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-4">You May Also Like</h2>
+      <h2 className="text-2xl font-bold mb-4">{t("youMayAlsoLike") || "You May Also Like"}</h2>
       <div className="relative">
         <div className="flex justify-center space-x-4 overflow-x-auto overflow-hidden p-10">
           {recommendedProducts.slice(startIndex, startIndex + productsToShow).map((product) => (

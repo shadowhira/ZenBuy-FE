@@ -54,7 +54,7 @@ export default function FeaturedProducts() {
         <div className="relative">
           <div className="flex space-x-4 justify-between h-[400px]">
             {displayedProducts.map((product) => (
-              <Card key={product.id} className={cn("flex-grow flex flex-col cursor-pointer", styles.productCard)} onClick={() => onClick(product.id)}>
+              <Card key={product._id} className={cn("flex-grow flex flex-col cursor-pointer", styles.productCard)} onClick={() => onClick(product._id)}>
                 <CardHeader>
                   <Image
                     src={product.images[0] || "/placeholder.svg"}

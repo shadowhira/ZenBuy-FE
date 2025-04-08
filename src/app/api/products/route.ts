@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import dbConnect from '@/lib/mongodb';
-import Product from '@/models/Product';
+import { ensureModelsRegistered, Product, Category, Shop } from '@/lib/models';
 import { getAuthUser } from '@/lib/auth-utils';
 
 const querySchema = z.object({
@@ -19,8 +19,22 @@ export async function GET(request: Request) {
   try {
     await dbConnect();
 
+    // Đảm bảo tất cả các models được đăng ký
+    ensureModelsRegistered();
+
     const { searchParams } = new URL(request.url);
-    const validatedParams = querySchema.parse(Object.fromEntries(searchParams));
+
+    // Log searchParams để debug
+    console.log('Search params:', Object.fromEntries(searchParams));
+
+    // Validate params với schema
+    let validatedParams;
+    try {
+      validatedParams = querySchema.parse(Object.fromEntries(searchParams));
+    } catch (error) {
+      console.error('Validation error:', error);
+      return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 });
+    }
 
     const { page, limit, category, query, minPrice, maxPrice, sort, featured } = validatedParams;
 

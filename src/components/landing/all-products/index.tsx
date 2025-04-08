@@ -31,7 +31,7 @@ export default function AllProducts() {
         console.error('Failed to fetch products:', error);
       }
     };
-  
+
     fetchProducts();
   }, [currentPage]);
 
@@ -47,7 +47,7 @@ export default function AllProducts() {
         <h2 className="text-3xl font-bold mb-6">{t('allProduct')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {allProducts.map((product) => (
-            <Card key={product.id} className={cn("flex flex-col h-full cursor-pointer", styles.productCard)} onClick={() => onClick(product.id)}>
+            <Card key={product._id} className={cn("flex flex-col h-full cursor-pointer", styles.productCard)} onClick={() => onClick(product._id)}>
               <CardHeader className="p-0">
                 <Image
                   src={product.images[0] || "/placeholder.svg"}

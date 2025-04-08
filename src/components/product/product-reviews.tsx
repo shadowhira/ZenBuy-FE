@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ProductReviewsProps {
-  productId: number;
+  productId: string | number;
 }
 
 export default function ProductReviews({ productId }: ProductReviewsProps) {

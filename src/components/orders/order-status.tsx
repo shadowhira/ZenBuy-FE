@@ -2,10 +2,12 @@
 
 import { useState } from "react"
 import { Button } from "@components/ui/button"
+import { useTranslation } from "react-i18next"
 
 const statuses = ["All", "Pending Payment", "Shipping", "Awaiting Delivery", "Completed", "Cancelled"]
 
 export default function OrderStatus() {
+  const { t } = useTranslation("orders");
   const [activeStatus, setActiveStatus] = useState("All")
 
   return (
@@ -16,7 +18,7 @@ export default function OrderStatus() {
           variant={activeStatus === status ? "default" : "outline"}
           onClick={() => setActiveStatus(status)}
         >
-          {status}
+          {t(status.toLowerCase().replace(" ", "")) || status}
         </Button>
       ))}
     </nav>
