@@ -15,7 +15,7 @@ import {
   Legend,
 } from "chart.js"
 import { Button } from "@components/ui/button"
-import styles from "@styles/seller.module.scss"
+
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -64,38 +64,38 @@ export default function SalesAnalysis() {
   }
 
   return (
-    <div className={styles.analysisContainer}>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <Card>
         <CardHeader>
           <CardTitle>Sales Overview</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className={styles.statsGrid}>
-            <div className={styles.statItem}>
-              <h3>Total Sales</h3>
-              <p>$12,345</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <h3 className="text-sm font-medium mb-1">Total Sales</h3>
+              <p className="text-xl font-bold">$12,345</p>
             </div>
-            <div className={styles.statItem}>
-              <h3>Orders</h3>
-              <p>234</p>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <h3 className="text-sm font-medium mb-1">Orders</h3>
+              <p className="text-xl font-bold">234</p>
             </div>
-            <div className={styles.statItem}>
-              <h3>Average Order Value</h3>
-              <p>$52.76</p>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <h3 className="text-sm font-medium mb-1">Average Order Value</h3>
+              <p className="text-xl font-bold">$52.76</p>
             </div>
-            <div className={styles.statItem}>
-              <h3>Conversion Rate</h3>
-              <p>3.2%</p>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <h3 className="text-sm font-medium mb-1">Conversion Rate</h3>
+              <p className="text-xl font-bold">3.2%</p>
             </div>
           </div>
         </CardContent>
       </Card>
-      <Card className={styles.chartCard}>
+      <Card className="col-span-1 md:col-span-2">
         <CardHeader>
           <CardTitle>Sales Analysis</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className={styles.timeFrameButtons}>
+          <div className="flex flex-wrap gap-2 mb-4">
             <Button onClick={() => setTimeFrame("1day")} variant={timeFrame === "1day" ? "default" : "outline"}>
               1 Day
             </Button>

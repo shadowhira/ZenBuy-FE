@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { DollarSign, Package, ShoppingCart, TrendingUp, Users } from "lucide-react"
 import RevenueChart from "@components/seller/revenue-chart"
-import styles from "@styles/seller.module.scss"
+
 
 export default function Dashboard() {
   return (
-    <div className={styles.dashboardContainer}>
-      <div className={styles.metricsGrid}>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>

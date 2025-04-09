@@ -13,7 +13,7 @@ import {
   Legend,
 } from "chart.js"
 import { Button } from "@components/ui/button"
-import styles from "@styles/seller.module.scss"
+
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -52,8 +52,8 @@ export default function RevenueChart() {
   }
 
   return (
-    <div className={styles.chartContainer}>
-      <div className={styles.filterButtons}>
+    <div className="mt-6 p-6 bg-white rounded-lg shadow-sm">
+      <div className="flex flex-wrap gap-2 mb-4">
         <Button onClick={() => handleFilterChange(1)}>1 Day</Button>
         <Button onClick={() => handleFilterChange(3)}>3 Days</Button>
         <Button onClick={() => handleFilterChange(7)}>7 Days</Button>

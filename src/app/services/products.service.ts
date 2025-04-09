@@ -37,5 +37,30 @@ export const productsService = {
     fetchApi<{ success: boolean }>(`/products/${id}`, {
       method: "DELETE",
     }),
+
+  getSimilarProducts: (categoryId: string) =>
+    fetchApi<ProductsResponse>(`/products?category=${categoryId}`),
+
+  // Seller specific endpoints
+  getSellerProducts: () => fetchApi<ProductsResponse>('/seller/products'),
+
+  getSellerProductById: (id: string) => fetchApi<Product>(`/seller/products/${id}`),
+
+  createSellerProduct: (product: Partial<Product>) =>
+    fetchApi<Product>("/seller/products", {
+      method: "POST",
+      body: JSON.stringify(product),
+    }),
+
+  updateSellerProduct: (id: string, product: Partial<Product>) =>
+    fetchApi<Product>(`/seller/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(product),
+    }),
+
+  deleteSellerProduct: (id: string) =>
+    fetchApi<{ success: boolean }>(`/seller/products/${id}`, {
+      method: "DELETE",
+    }),
 }
 
