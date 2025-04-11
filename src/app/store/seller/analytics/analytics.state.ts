@@ -7,6 +7,33 @@ import type { DailySales, ProductSales } from "../../../../types"
 const initialState: AnalyticsState = {
   dailySales: [],
   productSales: [],
+  totalRevenue: 0,
+  revenueChange: 0,
+  totalOrders: 0,
+  ordersChange: 0,
+  productsCount: 0,
+  activeCustomers: 0,
+  averageOrderValue: 0,
+  conversionRate: 0,
+  averageItemsPerOrder: 0,
+  paymentMethods: {
+    credit_card: 0,
+    bank_transfer: 0,
+    cash: 0
+  },
+  orderStatuses: {
+    pending: 0,
+    processing: 0,
+    shipped: 0,
+    delivered: 0,
+    cancelled: 0
+  },
+  couponUsage: {
+    rate: 0,
+    averageDiscount: 0,
+    totalDiscount: 0,
+    ordersWithCoupons: 0
+  },
   timeFrame: "week",
   isLoading: false,
   error: null,
@@ -59,16 +86,88 @@ export const useAnalyticsState = () => {
       state.error.set(value)
     },
 
-    // Computed values
     get totalRevenue() {
-      return state.dailySales.get().reduce((total, day) => total + day.revenue, 0)
+      return state.totalRevenue.get()
     },
+    set totalRevenue(value: number) {
+      state.totalRevenue.set(value)
+    },
+
+    get revenueChange() {
+      return state.revenueChange.get()
+    },
+    set revenueChange(value: number) {
+      state.revenueChange.set(value)
+    },
+
     get totalOrders() {
-      return state.dailySales.get().reduce((total, day) => total + day.orders, 0)
+      return state.totalOrders.get()
     },
+    set totalOrders(value: number) {
+      state.totalOrders.set(value)
+    },
+
+    get ordersChange() {
+      return state.ordersChange.get()
+    },
+    set ordersChange(value: number) {
+      state.ordersChange.set(value)
+    },
+
+    get productsCount() {
+      return state.productsCount.get()
+    },
+    set productsCount(value: number) {
+      state.productsCount.set(value)
+    },
+
+    get activeCustomers() {
+      return state.activeCustomers.get()
+    },
+    set activeCustomers(value: number) {
+      state.activeCustomers.set(value)
+    },
+
     get averageOrderValue() {
-      const totalOrders = this.totalOrders
-      return totalOrders > 0 ? this.totalRevenue / totalOrders : 0
+      return state.averageOrderValue.get()
+    },
+    set averageOrderValue(value: number) {
+      state.averageOrderValue.set(value)
+    },
+
+    get conversionRate() {
+      return state.conversionRate.get()
+    },
+    set conversionRate(value: number) {
+      state.conversionRate.set(value)
+    },
+
+    get averageItemsPerOrder() {
+      return state.averageItemsPerOrder.get()
+    },
+    set averageItemsPerOrder(value: number) {
+      state.averageItemsPerOrder.set(value)
+    },
+
+    get paymentMethods() {
+      return state.paymentMethods.get()
+    },
+    set paymentMethods(value: { credit_card: number, bank_transfer: number, cash: number }) {
+      state.paymentMethods.set(value)
+    },
+
+    get orderStatuses() {
+      return state.orderStatuses.get()
+    },
+    set orderStatuses(value: { pending: number, processing: number, shipped: number, delivered: number, cancelled: number }) {
+      state.orderStatuses.set(value)
+    },
+
+    get couponUsage() {
+      return state.couponUsage.get()
+    },
+    set couponUsage(value: { rate: number, averageDiscount: number, totalDiscount: number, ordersWithCoupons: number }) {
+      state.couponUsage.set(value)
     },
 
     // Actions
@@ -78,15 +177,38 @@ export const useAnalyticsState = () => {
         state.error.set(null)
         state.timeFrame.set(timeFrame)
 
-        const { dailySales, productSales } = await getAnalytics(timeFrame)
-        state.dailySales.set(dailySales)
-        state.productSales.set(productSales)
+        const data = await getAnalytics(timeFrame)
+        state.dailySales.set(data.dailySales)
+        state.productSales.set(data.productSales)
+        state.totalRevenue.set(data.totalRevenue)
+        state.revenueChange.set(data.revenueChange)
+        state.totalOrders.set(data.totalOrders)
+        state.ordersChange.set(data.ordersChange)
+        state.productsCount.set(data.productsCount)
+        state.activeCustomers.set(data.activeCustomers)
+        state.averageOrderValue.set(data.averageOrderValue)
+        state.conversionRate.set(data.conversionRate)
+
+        // Set new metrics
+        if (data.averageItemsPerOrder !== undefined) {
+          state.averageItemsPerOrder.set(data.averageItemsPerOrder)
+        }
+
+        if (data.paymentMethods !== undefined) {
+          state.paymentMethods.set(data.paymentMethods)
+        }
+
+        if (data.orderStatuses !== undefined) {
+          state.orderStatuses.set(data.orderStatuses)
+        }
+
+        if (data.couponUsage !== undefined) {
+          state.couponUsage.set(data.couponUsage)
+        }
+
         state.isLoading.set(false)
 
-        return {
-          dailySales,
-          productSales,
-        }
+        return data
       } catch (error) {
         state.set({
           ...state.get(),
@@ -96,6 +218,33 @@ export const useAnalyticsState = () => {
         return {
           dailySales: [],
           productSales: [],
+          totalRevenue: 0,
+          revenueChange: 0,
+          totalOrders: 0,
+          ordersChange: 0,
+          productsCount: 0,
+          activeCustomers: 0,
+          averageOrderValue: 0,
+          conversionRate: 0,
+          averageItemsPerOrder: 0,
+          paymentMethods: {
+            credit_card: 0,
+            bank_transfer: 0,
+            cash: 0
+          },
+          orderStatuses: {
+            pending: 0,
+            processing: 0,
+            shipped: 0,
+            delivered: 0,
+            cancelled: 0
+          },
+          couponUsage: {
+            rate: 0,
+            averageDiscount: 0,
+            totalDiscount: 0,
+            ordersWithCoupons: 0
+          }
         }
       }
     },

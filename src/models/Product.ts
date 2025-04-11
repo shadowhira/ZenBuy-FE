@@ -1,5 +1,13 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export interface ProductVariant {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  price: number;
+  stock: number;
+  attributes: Record<string, string>;
+}
+
 export interface IProduct extends Document {
   title: string;
   slug: string;
@@ -13,9 +21,17 @@ export interface IProduct extends Document {
   rating: number;
   reviews: number;
   featured: boolean;
+  variants?: ProductVariant[];
   createdAt: Date;
   updatedAt: Date;
 }
+
+const ProductVariantSchema = new Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  stock: { type: Number, required: true, default: 0 },
+  attributes: { type: Map, of: String, default: {} },
+}, { _id: true });
 
 const ProductSchema = new Schema(
   {
@@ -31,6 +47,7 @@ const ProductSchema = new Schema(
     rating: { type: Number, default: 0 },
     reviews: { type: Number, default: 0 },
     featured: { type: Boolean, default: false },
+    variants: [ProductVariantSchema],
   },
   { timestamps: true }
 );

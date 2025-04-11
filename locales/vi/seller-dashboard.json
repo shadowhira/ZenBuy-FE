@@ -1,0 +1,23 @@
+{
+  "sellerDashboard": "Bảng điều khiển người bán",
+  "totalRevenue": "Tổng doanh thu",
+  "fromLastPeriod": "so với kỳ trước",
+  "orders": "Đơn hàng",
+  "products": "Sản phẩm",
+  "totalProductsInInventory": "Tổng số sản phẩm trong kho",
+  "activeCustomers": "Khách hàng hoạt động",
+  "uniqueCustomersThisPeriod": "Khách hàng duy nhất trong kỳ này",
+  "conversionRate": "Tỷ lệ chuyển đổi",
+  "ordersProductViews": "Đơn hàng / Lượt xem sản phẩm",
+  "day": "1 Ngày",
+  "threeDays": "3 Ngày",
+  "week": "Tuần",
+  "month": "Tháng",
+  "noAnalyticsDataAvailable": "Không có dữ liệu phân tích",
+  "noAnalyticsDataMessage": "Chưa có dữ liệu phân tích. Bạn cần tạo dữ liệu mẫu để xem bảng điều khiển.",
+  "seedAnalyticsData": "Tạo dữ liệu phân tích mẫu",
+  "errorLoadingAnalytics": "Lỗi khi tải dữ liệu phân tích",
+  "retry": "Thử lại",
+  "avgItemsPerOrder": "Số mặt hàng TB/đơn",
+  "couponUsage": "Sử dụng mã giảm giá"
+}

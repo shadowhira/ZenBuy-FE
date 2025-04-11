@@ -2,6 +2,7 @@
   "sellerPortal": "Cổng người bán",
   "dashboard": "Bảng điều khiển",
   "products": "Sản phẩm",
+  "inventory": "Kho hàng",
   "orders": "Đơn hàng",
   "shop": "Cửa hàng",
   "customers": "Khách hàng",
@@ -39,5 +40,18 @@
   "errorLoadingProduct": "Lỗi khi tải sản phẩm",
   "productNotFound": "Không tìm thấy sản phẩm",
   "backToProducts": "Quay lại danh sách sản phẩm",
-  "editProduct": "Chỉnh sửa sản phẩm"
+  "editProduct": "Chỉnh sửa sản phẩm",
+  "manageVariants": "Quản lý biến thể",
+  "productVariants": "Biến thể sản phẩm",
+  "addVariant": "Thêm biến thể",
+  "editVariant": "Chỉnh sửa biến thể",
+  "deleteVariant": "Xóa biến thể",
+  "variantName": "Tên biến thể",
+  "attributes": "Thuộc tính",
+  "addAttribute": "Thêm thuộc tính",
+  "currentAttributes": "Thuộc tính hiện tại",
+  "noVariantsFound": "Không tìm thấy biến thể",
+  "createVariant": "Tạo một biến thể mới cho sản phẩm này với các thuộc tính, giá và kho hàng khác nhau.",
+  "updateVariant": "Cập nhật thông tin cho biến thể sản phẩm này.",
+  "deleteVariantConfirm": "Điều này sẽ xóa vĩnh viễn biến thể. Hành động này không thể hoàn tác."
 }

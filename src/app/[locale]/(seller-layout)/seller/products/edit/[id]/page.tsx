@@ -102,18 +102,25 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <Link href="/seller/products/list">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">{t("back") || "Back"}</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Link href="/seller/products/list">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="sr-only">{t("back") || "Back"}</span>
+            </Button>
+          </Link>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t("editProduct") || "Edit Product"}
+          </h2>
+        </div>
+        <Link href={`/seller/products/variants/${params.id}`}>
+          <Button variant="outline">
+            {t("manageVariants") || "Manage Variants"}
           </Button>
         </Link>
-        <h2 className="text-2xl font-bold tracking-tight">
-          {t("editProduct") || "Edit Product"}
-        </h2>
       </div>
-      
+
       <ProductForm initialData={product} />
     </div>
   )

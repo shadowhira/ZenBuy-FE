@@ -21,6 +21,8 @@ export interface IOrder extends Document {
   user: mongoose.Types.ObjectId;
   items: OrderItem[];
   totalAmount: number;
+  couponDiscount?: number;
+  couponCode?: string;
   shippingAddress: ShippingAddress;
   paymentMethod: 'credit_card' | 'bank_transfer' | 'cash';
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
@@ -50,16 +52,18 @@ const OrderSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     items: [OrderItemSchema],
     totalAmount: { type: Number, required: true },
+    couponDiscount: { type: Number },
+    couponCode: { type: String },
     shippingAddress: { type: ShippingAddressSchema, required: true },
-    paymentMethod: { 
-      type: String, 
-      enum: ['credit_card', 'bank_transfer', 'cash'], 
-      required: true 
+    paymentMethod: {
+      type: String,
+      enum: ['credit_card', 'bank_transfer', 'cash'],
+      required: true
     },
-    status: { 
-      type: String, 
-      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], 
-      default: 'pending' 
+    status: {
+      type: String,
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      default: 'pending'
     },
   },
   { timestamps: true }

@@ -2,6 +2,7 @@
   "sellerPortal": "Seller Portal",
   "dashboard": "Dashboard",
   "products": "Products",
+  "inventory": "Inventory",
   "orders": "Orders",
   "shop": "Shop",
   "customers": "Customers",
@@ -39,5 +40,18 @@
   "errorLoadingProduct": "Error Loading Product",
   "productNotFound": "Product not found",
   "backToProducts": "Back to Products",
-  "editProduct": "Edit Product"
+  "editProduct": "Edit Product",
+  "manageVariants": "Manage Variants",
+  "productVariants": "Product Variants",
+  "addVariant": "Add Variant",
+  "editVariant": "Edit Variant",
+  "deleteVariant": "Delete Variant",
+  "variantName": "Variant Name",
+  "attributes": "Attributes",
+  "addAttribute": "Add Attribute",
+  "currentAttributes": "Current Attributes",
+  "noVariantsFound": "No variants found",
+  "createVariant": "Create a new variant for this product with different attributes, price, and stock.",
+  "updateVariant": "Update the details for this product variant.",
+  "deleteVariantConfirm": "This will permanently delete the variant. This action cannot be undone."
 }

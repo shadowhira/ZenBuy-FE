@@ -1,0 +1,23 @@
+{
+  "sellerDashboard": "卖家仪表板",
+  "totalRevenue": "总收入",
+  "fromLastPeriod": "与上期相比",
+  "orders": "订单",
+  "products": "产品",
+  "totalProductsInInventory": "库存中的总产品数",
+  "activeCustomers": "活跃客户",
+  "uniqueCustomersThisPeriod": "本期独立客户",
+  "conversionRate": "转化率",
+  "ordersProductViews": "订单 / 产品浏览量",
+  "day": "1天",
+  "threeDays": "3天",
+  "week": "周",
+  "month": "月",
+  "noAnalyticsDataAvailable": "没有可用的分析数据",
+  "noAnalyticsDataMessage": "尚无分析数据。您需要创建一些数据才能查看仪表板。",
+  "seedAnalyticsData": "创建分析数据",
+  "errorLoadingAnalytics": "加载分析数据时出错",
+  "retry": "重试",
+  "avgItemsPerOrder": "每订单平均商品数",
+  "couponUsage": "优惠券使用率"
+}

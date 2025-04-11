@@ -9,6 +9,7 @@ import i18nConfig from "i18nConfig"
 import initTranslations from "./i18n"
 import { ReactQueryProvider } from "@components/providers/react-query-provider"
 import { SuspenseWrapper } from "@components/providers/suspense-wrapper"
+import { getAvailableNamespaces } from "@lib/i18n-utils"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -29,7 +30,8 @@ interface RootLayoutProps {
   };
 }
 
-const i18nNamespaces = ['landing', 'navbar-general', 'footer-general', "searchPage", "detail-product", "shopPage", "cart", "orders", "checkout"];
+// Tự động lấy tất cả các namespace từ thư mục locales
+const i18nNamespaces = getAvailableNamespaces();
 
 export default async function RootLayout({
   children,

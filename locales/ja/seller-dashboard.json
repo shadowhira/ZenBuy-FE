@@ -1,0 +1,23 @@
+{
+  "sellerDashboard": "販売者ダッシュボード",
+  "totalRevenue": "総収益",
+  "fromLastPeriod": "前期比",
+  "orders": "注文",
+  "products": "商品",
+  "totalProductsInInventory": "在庫の総商品数",
+  "activeCustomers": "アクティブな顧客",
+  "uniqueCustomersThisPeriod": "この期間の固有顧客",
+  "conversionRate": "コンバージョン率",
+  "ordersProductViews": "注文 / 商品閲覧数",
+  "day": "1日",
+  "threeDays": "3日",
+  "week": "週間",
+  "month": "月間",
+  "noAnalyticsDataAvailable": "分析データがありません",
+  "noAnalyticsDataMessage": "まだ分析データがありません。ダッシュボードを表示するにはデータを作成する必要があります。",
+  "seedAnalyticsData": "分析データを作成",
+  "errorLoadingAnalytics": "分析データの読み込みエラー",
+  "retry": "再試行",
+  "avgItemsPerOrder": "注文あたりの平均アイテム数",
+  "couponUsage": "クーポン使用率"
+}

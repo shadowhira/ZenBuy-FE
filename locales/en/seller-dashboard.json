@@ -1,0 +1,23 @@
+{
+  "sellerDashboard": "Seller Dashboard",
+  "totalRevenue": "Total Revenue",
+  "fromLastPeriod": "from last period",
+  "orders": "Orders",
+  "products": "Products",
+  "totalProductsInInventory": "Total products in inventory",
+  "activeCustomers": "Active Customers",
+  "uniqueCustomersThisPeriod": "Unique customers this period",
+  "conversionRate": "Conversion Rate",
+  "ordersProductViews": "Orders / Product Views",
+  "day": "1 Day",
+  "threeDays": "3 Days",
+  "week": "Week",
+  "month": "Month",
+  "noAnalyticsDataAvailable": "No Analytics Data Available",
+  "noAnalyticsDataMessage": "There is no analytics data available yet. You need to seed some data to see the dashboard.",
+  "seedAnalyticsData": "Seed Analytics Data",
+  "errorLoadingAnalytics": "Error Loading Analytics",
+  "retry": "Retry",
+  "avgItemsPerOrder": "Avg Items Per Order",
+  "couponUsage": "Coupon Usage"
+}
